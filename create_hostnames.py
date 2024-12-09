@@ -1,8 +1,7 @@
 import json
-import subprocess
 import random
+from simulator_config_vars import HOSTNAMES_FILES_PATH,hostname
 
-hostname = subprocess.run("hostname",shell=True,capture_output=True,text=True).stdout.strip()
 
 def generate_names(instance:dict, createNew: bool) -> dict:
     clients = instance["clients"]
@@ -13,8 +12,9 @@ def generate_names(instance:dict, createNew: bool) -> dict:
     if createNew or "names" not in instance:
         file = f"{domain}_names_{prefix}{suffix}.txt"
         instance["names"] = file
-    else:
-        file = instance["names"]
+
+    file = f"{HOSTNAMES_FILES_PATH}/{instance['names']}" 
+
     with open(file, "w") as f:
         for i in range(clients):
             name = f"test-{domain}-{hostname}-{i+1}-{prefix}{suffix}\n"
@@ -22,13 +22,14 @@ def generate_names(instance:dict, createNew: bool) -> dict:
     return instance
 
 
-def generate():
-    with open("testinput.json", 'r') as file:
+def generate(testinput_file):
+    print
+    with open(testinput_file, 'r') as file:
         data = json.load(file)
         for instance in data["instances"]:
             instance = generate_names(instance, False)  
         
-    with open("testinput.json", "w") as file:
+    with open(testinput_file, "w") as file:
         file.write(json.dumps(data, indent=4))
         
 if __name__ == "__main__":

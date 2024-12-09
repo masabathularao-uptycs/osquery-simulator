@@ -1,0 +1,70 @@
+{
+    "instances": [
+        {
+            "instanceid": 11,
+            "domain": "jupiter10",
+            "secret": "f576756c-6ef4-46f6-9a0e-34b1bf4eb333",
+            "clients": 100,
+            "port": 30011
+        },
+        {
+            "instanceid": 23,
+            "domain": "jupiter22",
+            "secret": "c1f75161-daa1-40c0-9aa0-f0220756dc29",
+            "clients": 100,
+            "port": 30023
+        },
+        {
+            "instanceid": 35,
+            "domain": "jupiter34",
+            "secret": "b78bd859-2a52-45e0-b856-e4babff096ea",
+            "clients": 100,
+            "port": 30035
+        },
+        {
+            "instanceid": 47,
+            "domain": "jupiter46",
+            "secret": "7803a6ba-016f-42b5-8757-a43a169b0915",
+            "clients": 100,
+            "port": 30047
+        },
+        {
+            "instanceid": 59,
+            "domain": "jupiter58",
+            "secret": "df476470-21dc-4ea5-9f99-5bd940644de1",
+            "clients": 100,
+            "port": 30059
+        },
+        {
+            "instanceid": 71,
+            "domain": "jupiter70",
+            "secret": "289afa68-d63e-4a23-aab3-d95d85793339",
+            "clients": 100,
+            "port": 30071
+        },
+        {
+            "instanceid": 83,
+            "domain": "jupiter82",
+            "secret": "1c0167cd-c4fe-4977-9363-a890b95622f9",
+            "clients": 100,
+            "port": 30083
+        },
+        {
+            "instanceid": 95,
+            "domain": "jupiter94",
+            "secret": "86fd494b-7c19-4413-b2de-bf926c2f7fe4",
+            "clients": 100,
+            "port": 30095
+        }
+    ],
+    "time": "0000-01-02-01-01",
+    "inputfile": "/Users/masabathulararao/Documents/osquery_simulator/input_files/rhel7-6tab_12rec.log",
+    "startline": 0,
+    "endline": 600,
+    "delaybetweentrigger": 4,
+    "time_between_instance_seconds": 10,
+    "message_multiplier": 2,
+    "repeat_input_file": 0,
+    "linenumber": 0,
+    "numberoftriggers": 200
+}

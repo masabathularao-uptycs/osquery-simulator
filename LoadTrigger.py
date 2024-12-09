@@ -1,12 +1,12 @@
 import time
 import sys
 import datetime
-import os
 import json
 import logging
 import _thread
 import threading
 import requests
+from simulator_config_vars import testinput_file
 
 global datastats_action
 global record_count
@@ -20,8 +20,6 @@ statsflag=True
 
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s - %(message)s')
 
-base_dir_path =os.path.dirname(os.path.realpath(__file__))
-testinput_file = os.path.join(base_dir_path,"testinput.json")
 LOCAL_HOST = "127.0.0.1"
 
 

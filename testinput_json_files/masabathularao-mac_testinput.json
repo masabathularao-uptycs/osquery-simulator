@@ -1,0 +1,78 @@
+{
+    "instances": [
+        {
+            "instanceid": 13,
+            "domain": "jupiter12",
+            "secret": "2e3631db-f872-49b8-8f00-8897f4353e09",
+            "clients": 294,
+            "port": 30013,
+            "names": "jupiter12_names_4840.txt"
+        },
+        {
+            "instanceid": 14,
+            "domain": "jupiter13",
+            "secret": "0c79371e-29c0-42bf-a756-1836bf48778e",
+            "clients": 272,
+            "port": 30014,
+            "names": "jupiter13_names_5654.txt"
+        },
+        {
+            "instanceid": 23,
+            "domain": "jupiter22",
+            "secret": "c1f75161-daa1-40c0-9aa0-f0220756dc29",
+            "clients": 132,
+            "port": 30023,
+            "names": "jupiter22_names_5578.txt"
+        },
+        {
+            "instanceid": 37,
+            "domain": "jupiter36",
+            "secret": "e052b65f-d92b-4222-90c3-cb7ea0345c80",
+            "clients": 43,
+            "port": 30037,
+            "names": "jupiter36_names_8229.txt"
+        },
+        {
+            "instanceid": 49,
+            "domain": "jupiter48",
+            "secret": "34a49349-f88d-4fea-a506-9fb20a7efe2c",
+            "clients": 16,
+            "port": 30049,
+            "names": "jupiter48_names_6163.txt"
+        },
+        {
+            "instanceid": 58,
+            "domain": "jupiter57",
+            "secret": "3d6103c2-b1ff-41b2-bf9b-cb92fdea9915",
+            "clients": 8,
+            "port": 30058,
+            "names": "jupiter57_names_9396.txt"
+        },
+        {
+            "instanceid": 77,
+            "domain": "jupiter76",
+            "secret": "99264594-82e7-4f8f-a546-d6c8434a4b7a",
+            "clients": 2,
+            "port": 30077,
+            "names": "jupiter76_names_496.txt"
+        },
+        {
+            "instanceid": 89,
+            "domain": "jupiter88",
+            "secret": "0ebb029d-0530-471d-91b0-b68e0f35522d",
+            "clients": 1,
+            "port": 30089,
+            "names": "jupiter88_names_9238.txt"
+        }
+    ],
+    "time": "0000-01-02-01-01",
+    "inputfile": "/Users/masabathulararao/Documents/osquery_simulator/input_files/rhel7-6tab_12rec.log",
+    "startline": 0,
+    "endline": 600,
+    "delaybetweentrigger": 4,
+    "time_between_instance_seconds": 10,
+    "message_multiplier": 2,
+    "repeat_input_file": 0,
+    "linenumber": 0,
+    "numberoftriggers": 200
+}

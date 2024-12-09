@@ -1,0 +1,77 @@
+{
+    "instances": [
+        {
+            "instanceid": 1,
+            "domain": "jupiter",
+            "secret": "232b58f0-fe0f-4a20-9042-b2f0953f0ce5",
+            "clients": 100,
+            "port": 30001
+        },
+        {
+            "instanceid": 13,
+            "domain": "jupiter12",
+            "secret": "2e3631db-f872-49b8-8f00-8897f4353e09",
+            "clients": 100,
+            "port": 30013
+        },
+        {
+            "instanceid": 25,
+            "domain": "jupiter24",
+            "secret": "f5f59409-90a6-4b2b-8e70-94ae8fb99824",
+            "clients": 100,
+            "port": 30025
+        },
+        {
+            "instanceid": 37,
+            "domain": "jupiter36",
+            "secret": "e052b65f-d92b-4222-90c3-cb7ea0345c80",
+            "clients": 100,
+            "port": 30037
+        },
+        {
+            "instanceid": 49,
+            "domain": "jupiter48",
+            "secret": "34a49349-f88d-4fea-a506-9fb20a7efe2c",
+            "clients": 100,
+            "port": 30049
+        },
+        {
+            "instanceid": 61,
+            "domain": "jupiter60",
+            "secret": "26fb6a1a-126d-4c19-ab0f-3cf668a65e6b",
+            "clients": 100,
+            "port": 30061
+        },
+        {
+            "instanceid": 73,
+            "domain": "jupiter72",
+            "secret": "565d1440-c496-428e-9d07-408fb564b443",
+            "clients": 100,
+            "port": 30073
+        },
+        {
+            "instanceid": 85,
+            "domain": "jupiter84",
+            "secret": "84c78d82-aa5e-4e41-bfd2-cb58355f7207",
+            "clients": 100,
+            "port": 30085
+        },
+        {
+            "instanceid": 97,
+            "domain": "jupiter96",
+            "secret": "4dfcefe2-7d4c-4982-b8dc-961983a089a2",
+            "clients": 100,
+            "port": 30097
+        }
+    ],
+    "time": "0000-01-02-01-01",
+    "inputfile": "/Users/masabathulararao/Documents/osquery_simulator/input_files/rhel7-6tab_12rec.log",
+    "startline": 0,
+    "endline": 600,
+    "delaybetweentrigger": 4,
+    "time_between_instance_seconds": 10,
+    "message_multiplier": 2,
+    "repeat_input_file": 0,
+    "linenumber": 0,
+    "numberoftriggers": 200
+}

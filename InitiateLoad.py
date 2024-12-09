@@ -1,14 +1,10 @@
 import json
 import sys
-import os
 import subprocess
+from simulator_config_vars import ROOT_PATH,HOSTNAMES_FILES_PATH,testinput_file
+from create_hostnames import generate  
 
-from create_hostnames import generate
-
-generate()
-
-base_dir_path =os.path.dirname(os.path.realpath(__file__))
-testinput_file = os.path.join(base_dir_path,"testinput.json")
+generate(testinput_file)
 
 portlist=[]
 
@@ -31,7 +27,7 @@ def newport(eachinstance):
    eachinstance['port']=newport
    portlist.append(eachinstance['port'])
    
-   loadcmd=f'nohup {base_dir_path}/endpointsim --count=' + str(eachinstance['clients']) + ' --domain=' + eachinstance['domain'] +' --secret=' + '\'' + eachinstance['secret'] + '\'' + f' --name=\'{base_dir_path}/'+eachinstance['names'] + '\'' + ' --port=' +str(eachinstance['port']) + ' &> osx_log' + str(eachinstance['port']) +'.out &'
+   loadcmd=f'nohup {ROOT_PATH}/endpointsim --count=' + str(eachinstance['clients']) + ' --domain=' + eachinstance['domain'] +' --secret=' + '\'' + eachinstance['secret'] + '\'' + f' --name=\'{HOSTNAMES_FILES_PATH}/'+eachinstance['names'] + '\'' + ' --port=' +str(eachinstance['port']) + ' &> osx_log' + str(eachinstance['port']) +'.out &'
    #commands.getoutput(loadcmd)
    return loadcmd
 
@@ -45,7 +41,7 @@ def check_instance_state():
       instance_up_count=subprocess.getoutput(cmd)
       if(int(instance_up_count)==num_expected_instances):
          break
-      Fd1=open(f'{base_dir_path}/checkExecuteLoad.sh',"w")
+      Fd1=open(f'{ROOT_PATH}/checkExecuteLoad.sh',"w")
       Fd1.write('#!/bin/bash' + '\n')
 
       #checking each instance whether they are up or not
@@ -65,7 +61,7 @@ def check_instance_state():
       Fd1.write("sleep 20" +'\n')      
       Fd1.close()
       subprocess.getoutput("chmod 777 checkExecuteLoad.sh")
-      subprocess.getoutput(f'{base_dir_path}/checkExecuteLoad.sh')
+      subprocess.getoutput(f'{ROOT_PATH}/checkExecuteLoad.sh')
 
 
 try:
@@ -79,11 +75,11 @@ except Exception as e:
 instance_list=testinput_contents['instances']
 num_expected_instances = len(instance_list)
 
-Fd=open(f'{base_dir_path}/executeload.sh',"w")
+Fd=open(f'{ROOT_PATH}/executeload.sh',"w")
 Fd.write('#!/bin/bash' + '\n')
 
 for eachinstance in instance_list:
-   loadcmd=f'nohup {base_dir_path}/endpointsim --count=' + str(eachinstance['clients']) + ' --domain=' + eachinstance['domain'] +' --secret=' + '\'' + eachinstance['secret'] + '\'' + f' --name=\'{base_dir_path}/'+eachinstance['names'] + '\'' + ' --port=' +str(eachinstance['port']) + ' &> osx_log' + str(eachinstance['port']) +'.out &'
+   loadcmd=f'nohup {ROOT_PATH}/endpointsim --count=' + str(eachinstance['clients']) + ' --domain=' + eachinstance['domain'] +' --secret=' + '\'' + eachinstance['secret'] + '\'' + f' --name=\'{HOSTNAMES_FILES_PATH}/'+eachinstance['names'] + '\'' + ' --port=' +str(eachinstance['port']) + ' &> osx_log' + str(eachinstance['port']) +'.out &'
    print(loadcmd)
    Fd.write(loadcmd +'\n')
    # Fd.write("sleep 10" +'\n')
@@ -91,7 +87,7 @@ for eachinstance in instance_list:
 Fd.write("sleep 20" +'\n')   
 Fd.close()
 subprocess.getoutput("chmod 777 executeload.sh")
-subprocess.getoutput(f'{base_dir_path}/executeload.sh')
+subprocess.getoutput(f'{ROOT_PATH}/executeload.sh')
 check_instance_state()
 
 
