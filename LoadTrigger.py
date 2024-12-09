@@ -6,7 +6,8 @@ import logging
 import _thread
 import threading
 import requests
-from simulator_config_vars import testinput_file
+from simulator_config_vars import testinput_file,TESTINPUT_FILES_PATH
+from test_input_params import test_input_params
 
 global datastats_action
 global record_count
@@ -75,20 +76,20 @@ except Exception as e:
     sys.exit(1)
     
 instance=testinput_contents['instances']
-endline=testinput_contents['endline']
-delaybetweentrigger = testinput_contents['delaybetweentrigger']
+endline=test_input_params['endline']
+delaybetweentrigger = test_input_params['delaybetweentrigger']
 
 print("Total duration of the load in seconds: ", endline*delaybetweentrigger/2)
 portlist=[]
 for eachinstance in instance:
    portlist.append(eachinstance['port'])
 
-linenumber=testinput_contents['linenumber']
+linenumber=test_input_params['linenumber']
 
 if linenumber == 0:
     print("playing full file...")
     firstline=0
-    Time=testinput_contents['time'].split('-')
+    Time=test_input_params['time'].split('-')
     if Time[0] == '0000':
       unix_timestamp=int(time.time())
       print(f"year provided is {Time[0]}, new unix_timestamp generated is : ", unix_timestamp)
@@ -98,8 +99,8 @@ if linenumber == 0:
       unix_timestamp = int(time.mktime(datetime_object.timetuple()))
       print(f"year provided is {Time[0]}, so using provided unix_timestamp : ", unix_timestamp)
 
-    with open(testinput_contents['inputfile']) as fs:
-      startline=testinput_contents['startline']
+    with open(TESTINPUT_FILES_PATH/test_input_params['inputfile']) as fs:
+      startline=test_input_params['startline']
       if startline != 0:
         print('start skipping lines')
         logging.warning("skipping "+str(startline) +" lines")
@@ -140,7 +141,7 @@ if linenumber == 0:
 else:
     count=0
     print("play single log message")
-    TimeCon=testinput_contents['time']
+    TimeCon=test_input_params['time']
     Time= TimeCon.split('-')
     if Time[0] == '0000':
       unixtime=int(str(time.time()).split('.')[0])
@@ -153,10 +154,10 @@ else:
       d = datetime.datetime(year,month,day,hr,minute)
       unixtime = int(time.mktime(d.timetuple()))
     begtime=int(str(time.time()).split('.')[0])
-    with open(testinput_contents['inputfile']) as f:
-      for Line in range(0,int(testinput_contents['linenumber'])):
+    with open(TESTINPUT_FILES_PATH/test_input_params['inputfile']) as f:
+      for Line in range(0,int(test_input_params['linenumber'])):
           message = f.readline().strip('\n')
-    for no in range(0,int(testinput_contents['numberoftriggers'])):
+    for no in range(0,int(test_input_params['numberoftriggers'])):
      curtime=int(str(time.time()).split('.')[0]) 
      difftime=curtime-begtime
      newtime=unixtime+difftime
@@ -170,10 +171,10 @@ else:
      if len(final_message) == 10:
         print(("reading data is done",count))
         break
-     if testinput_contents['delaybetweentrigger'] == '0':
+     if test_input_params['delaybetweentrigger'] == '0':
         delay=1
      else:
-         delay=int(testinput_contents['delaybetweentrigger'])
+         delay=int(test_input_params['delaybetweentrigger'])
      time.sleep(delay)
      analyse(message)
      logging.warning("trigger no: " +str(no))

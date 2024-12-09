@@ -2,3 +2,7 @@ __pycache__
 input_files
 *.log
 *.out
+hostnames
+flask_session
+simulator_venv
+test.py

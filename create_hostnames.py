@@ -14,7 +14,7 @@ def generate_names(instance:dict, createNew: bool) -> dict:
         instance["names"] = file
 
     file = f"{HOSTNAMES_FILES_PATH}/{instance['names']}" 
-
+    
     with open(file, "w") as f:
         for i in range(clients):
             name = f"test-{domain}-{hostname}-{i+1}-{prefix}{suffix}\n"

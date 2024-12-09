@@ -4,67 +4,57 @@
             "instanceid": 7,
             "domain": "jupiter6",
             "secret": "cd9681a3-2013-43ab-8ccb-defa44629c90",
-            "clients": 100,
+            "clients": 275,
             "port": 30007
         },
         {
-            "instanceid": 19,
-            "domain": "jupiter18",
-            "secret": "1c6e67ac-42a1-4c0e-b6e0-c1d6583fb331",
-            "clients": 100,
-            "port": 30019
+            "instanceid": 18,
+            "domain": "jupiter17",
+            "secret": "5e06d050-7637-4cc2-b742-1ff1b6cdea52",
+            "clients": 192,
+            "port": 30018
         },
         {
-            "instanceid": 31,
-            "domain": "jupiter30",
-            "secret": "eb964af7-4329-4852-baec-1f8709ae5a06",
-            "clients": 100,
-            "port": 30031
+            "instanceid": 30,
+            "domain": "jupiter29",
+            "secret": "11e877dc-e5c0-4dc7-b697-bbe9e3996ab0",
+            "clients": 130,
+            "port": 30030
         },
         {
-            "instanceid": 43,
-            "domain": "jupiter42",
-            "secret": "6b33f9a9-6659-4120-9430-ef5a046278bd",
-            "clients": 100,
-            "port": 30043
+            "instanceid": 41,
+            "domain": "jupiter40",
+            "secret": "4121711c-087b-4cf9-9878-f12c1e440f48",
+            "clients": 90,
+            "port": 30041
         },
         {
-            "instanceid": 55,
-            "domain": "jupiter54",
-            "secret": "7b9a5f81-6afd-47ea-ace5-21912f329e84",
-            "clients": 100,
-            "port": 30055
+            "instanceid": 56,
+            "domain": "jupiter55",
+            "secret": "a9d2348c-3bb8-43c5-9585-cc0c7a520618",
+            "clients": 55,
+            "port": 30056
         },
         {
-            "instanceid": 67,
-            "domain": "jupiter66",
-            "secret": "b2be5df0-7363-48df-886b-45a706e62afd",
-            "clients": 100,
-            "port": 30067
+            "instanceid": 62,
+            "domain": "jupiter61",
+            "secret": "51d8a1f6-8195-4b71-aeb2-f785f9b7f0f3",
+            "clients": 45,
+            "port": 30062
         },
         {
-            "instanceid": 79,
-            "domain": "jupiter78",
-            "secret": "c5b4dd79-b6fb-4808-a817-9b142539a995",
-            "clients": 100,
-            "port": 30079
+            "instanceid": 83,
+            "domain": "jupiter82",
+            "secret": "1c0167cd-c4fe-4977-9363-a890b95622f9",
+            "clients": 23,
+            "port": 30083
         },
         {
-            "instanceid": 91,
-            "domain": "jupiter90",
-            "secret": "1448e522-4487-4576-9b23-34fafa7839ec",
-            "clients": 100,
-            "port": 30091
+            "instanceid": 88,
+            "domain": "jupiter87",
+            "secret": "f622a808-1fce-4af6-a2cb-de79a225824b",
+            "clients": 19,
+            "port": 30088
         }
-    ],
-    "time": "0000-01-02-01-01",
-    "inputfile": "/Users/masabathulararao/Documents/osquery_simulator/input_files/rhel7-6tab_12rec.log",
-    "startline": 0,
-    "endline": 600,
-    "delaybetweentrigger": 4,
-    "time_between_instance_seconds": 10,
-    "message_multiplier": 2,
-    "repeat_input_file": 0,
-    "linenumber": 0,
-    "numberoftriggers": 200
+    ]
 }
