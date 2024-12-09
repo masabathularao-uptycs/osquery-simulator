@@ -10,11 +10,11 @@ def generate_names(instance:dict, createNew: bool) -> dict:
     suffix = random.randint(1,100)
     prefix = random.randint(1,100)
     
-    file = instance["names"]
-    if createNew:
+    if createNew or "names" not in instance:
         file = f"{domain}_names_{prefix}{suffix}.txt"
-        
-    instance["names"] = file
+        instance["names"] = file
+    else:
+        file = instance["names"]
     with open(file, "w") as f:
         for i in range(clients):
             name = f"test-{domain}-{hostname}-{i+1}-{prefix}{suffix}\n"

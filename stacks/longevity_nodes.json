@@ -1,0 +1,34 @@
+{
+    "stack": "Longevity",
+    "architecture": "2 X 6SU",
+    "domain": "longevity",
+    "suffix": "uptycs.net",
+    "monitoring_node_ip":"long-monitor",
+    "event_rules_per_cust": {
+        "enabled": 39,
+        "triggered": 33
+    },
+    "alert_rules_per_cust": {
+        "enabled": 12,
+        "triggered": 12
+    },
+    "execute_kafka_topics_script_in":"long-c1pn1",
+    "execute_trino_queries_in":"long-c1pn2",
+
+    "elastic_node_ip": "192.168.148.52",
+    "pgbadger_reports_mount": "data",
+
+    "apiload_simulator_ip":"192.168.145.94",
+    "prestoload_simulator_ip": "192.168.145.94",
+
+    "kubesim_nodes": [
+        "long-kube-sim1",
+        "long-kube-sim2"
+    ],
+    "selfsim_nodes": [
+        "long-self-managed-container1"
+    ],
+    "azuresim_nodes": [
+        "long-azure-sim1"
+    ]
+}

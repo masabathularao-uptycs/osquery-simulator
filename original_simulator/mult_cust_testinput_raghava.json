@@ -1,0 +1,95 @@
+{
+    "instances": [
+        {
+            "instanceid": 1,
+            "clients": 63,
+            "domain": "jupiter",
+            "port":24339,
+            "names": "knames1a.txt",
+            "secret": "5ec2ae35-ce4c-499b-ae3a-2342692d991d"
+        },
+        {
+            "instanceid": 2,
+            "clients": 63,
+            "domain": "jupiter1",
+            "port":24341,
+            "names": "knames1.txt",
+            "secret": "46f82c03-92db-4485-9b71-87ae1bb29112"
+        },
+        {
+            "instanceid": 3,
+            "clients": 63,
+            "domain": "jupiter2",
+            "port":24353,
+            "names": "knames1a.txt",
+            "secret": "66a36a7b-a06c-48ff-b4dc-520e54502d57"
+        },
+        {
+            "instanceid": 4,
+            "clients": 63,
+            "domain": "jupiter3",
+            "port":24343,
+            "names": "knames1b.txt",
+            "secret": "5cacec3b-d0c7-42a3-95c8-342a449af9a8"
+        },
+        {
+            "instanceid": 5,
+            "clients": 63,
+            "domain": "jupiter4",
+            "port":24357,
+            "names": "knames1c.txt",
+            "secret": "2db92591-3213-43bd-8e2a-5cd241ad9fd3"
+        },
+        {
+            "instanceid": 6,
+            "clients": 63,
+            "domain": "jupiter5",
+            "port":24345,
+            "names": "knames2.txt",
+            "secret": "34dce9a8-199c-490e-8647-f52cfbc14787"
+        },
+        {
+            "instanceid": 7,
+            "clients": 63,
+            "domain": "jupiter6",
+            "port":24351,
+            "names": "knames2a.txt",
+            "secret": "fb29cf7a-570b-4a0f-8b18-84785bde6c32"
+        },
+        {
+            "instanceid": 8,
+            "clients": 63,
+            "domain": "jupiter7",
+            "port":24347,
+            "names": "knames2b.txt",
+            "secret": "8f575c32-005d-494d-b7b5-7030dad2b0c6"
+        },
+        {
+            "instanceid": 9,
+            "clients": 63,
+            "domain": "jupiter8",
+            "port":24355,
+            "names": "knames2c.txt",
+            "secret": "8d97e4e6-8b46-4d62-a4ff-d22549cafcb3"
+        },
+        {
+            "instanceid": 10,
+            "clients": 63,
+            "domain": "jupiter9",
+            "port":24349,
+            "names": "knames3.txt",
+            "secret": "f9fc2fb2-87ba-4d36-bf12-177396e59313"
+        }
+    ],
+    "delaybetweentrigger": 2,
+    "inputfile": "rhel7-6tab_12rec.log",
+    "startline": 0,
+    "endline": 18000,
+    "time_between_instance_seconds": 3,
+    "time": "0000-01-02-01-01",
+    "linenumber": 0,
+    "message_multiplier": 2,
+    "trafficinstances": 32,
+    "repeat_input_file": 3,
+    "numberoftriggers": 200
+}

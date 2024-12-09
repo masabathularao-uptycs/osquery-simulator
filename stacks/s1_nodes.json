@@ -1,0 +1,31 @@
+{
+    "stack": "S1",
+    "architecture": "1 X 6SU",
+    "domain": "jupiter",
+    "suffix": "uptycs.net",
+    "monitoring_node_ip":"s1monitor",
+    "event_rules_per_cust": {
+        "enabled": 39,
+        "triggered": 34
+    },
+    "alert_rules_per_cust": {
+        "enabled": 21,
+        "triggered": 16
+    },
+    "execute_kafka_topics_script_in":"s1c1pn1",
+    "execute_trino_queries_in":"s1c1pn4",
+
+    "elastic_node_ip": "192.168.129.52",
+    "pgbadger_reports_mount":"data",
+
+    "apiload_simulator_ip": "192.168.135.52",
+    
+    "configdb_node":"192.168.148.75",
+    "multicustomer_load_params":{
+        "customers":100,
+        "sims":["s1sim1a","s1sim1b","s1sim1c","s1sim1d","s1sim2a","s1sim2b","s1sim2c","s1sim2d","s1sim3a","s1sim3b","s1sim3c","s1sim3d"],
+        "total_assets":10000,
+        "first_x_customer_percentage":20,
+        "load_percentage_for_first_x_percent_customers":80
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "instances": [
+        {
+            "instanceid": 1,
+            "domain": "jupiter",
+            "secret": "232b58f0-fe0f-4a20-9042-b2f0953f0ce5",
+            "clients": 773,
+            "port": 30001
+        },
+        {
+            "instanceid": 40,
+            "domain": "jupiter39",
+            "secret": "13e145ad-0b57-4e72-b2d5-f8f10134d4bc",
+            "clients": 34,
+            "port": 30040
+        },
+        {
+            "instanceid": 50,
+            "domain": "jupiter49",
+            "secret": "da9fd091-9403-4644-983a-71b9508222c8",
+            "clients": 15,
+            "port": 30050
+        },
+        {
+            "instanceid": 59,
+            "domain": "jupiter58",
+            "secret": "df476470-21dc-4ea5-9f99-5bd940644de1",
+            "clients": 7,
+            "port": 30059
+        },
+        {
+            "instanceid": 72,
+            "domain": "jupiter71",
+            "secret": "4e63fa3f-0bc9-4e4c-9efb-6c63da44c3f4",
+            "clients": 3,
+            "port": 30072
+        },
+        {
+            "instanceid": 86,
+            "domain": "jupiter85",
+            "secret": "96c48b0d-1585-49aa-9caf-38dc1e6a2561",
+            "clients": 1,
+            "port": 30086
+        },
+        {
+            "instanceid": 97,
+            "domain": "jupiter96",
+            "secret": "4dfcefe2-7d4c-4982-b8dc-961983a089a2",
+            "clients": 1,
+            "port": 30097
+        }
+    ]
+}

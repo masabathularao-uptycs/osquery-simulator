@@ -1,0 +1,25 @@
+{
+    "stack": "S18",
+    "architecture": "1 X 3SU",
+    "domain": "virgo",
+    "suffix": "uptycs.net",
+    "monitoring_node_ip":"s18monitor1",
+    "event_rules_per_cust":{"enabled":39,"triggered":33},
+    "alert_rules_per_cust":{"enabled":39,"triggered":33},
+    
+
+
+
+
+
+    "execute_kafka_topics_script_in":"s18c1pn1",
+    "execute_trino_queries_in":"s18c1pn2",
+
+    "kubesim_nodes": [
+        "s18sim1c",
+        "s18sim1d"
+    ],
+    "selfsim_nodes": [
+        "s18sim2a"
+    ]
+}

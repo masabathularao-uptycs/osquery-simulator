@@ -1,0 +1,23 @@
+{
+    "instances": [
+        {
+            "instanceid": 1,
+            "clients": 20 ,
+            "domain": "jupiter121",
+            "port": 34353,
+            "names": "knames.txt",
+            "secret": "d93abd34-6603-4d0f-961b-7a4001fb22fc"
+        }
+    ],
+    "delaybetweentrigger": 2,
+    "inputfile": "rhel7-6tab_12rec.log",
+    "startline": 0,
+    "endline": 900,
+    "time_between_instance_seconds": 3,
+    "time": "0000-01-02-01-01",
+    "linenumber": 0,
+    "message_multiplier": 2,
+    "trafficinstances": 32,
+    "repeat_input_file": 3,
+    "numberoftriggers": 200
+}
