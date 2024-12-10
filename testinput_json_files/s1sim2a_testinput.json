@@ -1,60 +1,39 @@
 {
     "instances": [
         {
-            "instanceid": 5,
-            "domain": "jupiter4",
-            "secret": "3e9e1ea0-436f-436b-8dd9-09823be20a31",
-            "clients": 294,
-            "port": 30005
+            "instanceid": 3,
+            "domain": "jupiter2",
+            "secret": "b4d8da68-7dbb-458b-90fe-69c40badeb5b",
+            "clients": 1,
+            "port": 30003
         },
         {
-            "instanceid": 20,
-            "domain": "jupiter19",
-            "secret": "fce3ddde-3d5c-42f0-bdd6-098643ceb240",
-            "clients": 180,
-            "port": 30020
+            "instanceid": 4,
+            "domain": "jupiter3",
+            "secret": "079e08a7-1539-4a4e-81e5-fa9352f1f25d",
+            "clients": 1,
+            "port": 30004
         },
         {
-            "instanceid": 32,
-            "domain": "jupiter31",
-            "secret": "c13c08d1-4f65-4d8c-973b-08b535387f57",
-            "clients": 121,
-            "port": 30032
+            "instanceid": 6,
+            "domain": "jupiter5",
+            "secret": "2f71e88a-a003-4451-80c6-e8d3c2589728",
+            "clients": 1,
+            "port": 30006
         },
         {
-            "instanceid": 38,
-            "domain": "jupiter37",
-            "secret": "1883d0f7-1238-4544-898c-8d69ceb933d0",
-            "clients": 100,
-            "port": 30038
+            "instanceid": 8,
+            "domain": "jupiter7",
+            "secret": "35dcb99b-11b7-4728-ad37-494ab16fe885",
+            "clients": 1,
+            "port": 30008
         },
         {
-            "instanceid": 59,
-            "domain": "jupiter58",
-            "secret": "df476470-21dc-4ea5-9f99-5bd940644de1",
-            "clients": 50,
-            "port": 30059
-        },
-        {
-            "instanceid": 67,
-            "domain": "jupiter66",
-            "secret": "b2be5df0-7363-48df-886b-45a706e62afd",
-            "clients": 38,
-            "port": 30067
-        },
-        {
-            "instanceid": 78,
-            "domain": "jupiter77",
-            "secret": "7bf2c0f5-a1e0-4066-86e1-70c15fddc607",
-            "clients": 27,
-            "port": 30078
-        },
-        {
-            "instanceid": 87,
-            "domain": "jupiter86",
-            "secret": "e85996d0-496b-4d6f-942f-5b607c5fc54f",
-            "clients": 20,
-            "port": 30087
+            "instanceid": 10,
+            "domain": "jupiter9",
+            "secret": "6fd19fc2-8fb3-445e-a243-cb15b3edcc7d",
+            "clients": 1,
+            "port": 30010
         }
     ]
 }

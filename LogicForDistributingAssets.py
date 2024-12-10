@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import root_scalar
 import math
-import sys
+# import sys
 
 def softmax(x, base):
     """Custom softmax function with custom base."""
@@ -13,6 +13,8 @@ def softmax(x, base):
 
 
 def find_optimal_exponent(customers, target_load_percentage, target_customer_ratio):
+    if customers == 1:
+        return 1
     # Indices defining the cut-off for the first target_customer_ratio percentage of customers
     cutoff_idx = math.floor(customers * target_customer_ratio)  # Cut-off index for the first X% customers
     customer_indices = list(range(1, customers + 1))
@@ -38,25 +40,30 @@ def load_distribution(num_customers,first_x_customer_percentage,load_percentage_
     # num_customers = 10  # Total number of customers
     # first_x_customer_percentage = 20  # Percentage of customers considered (first 10%)
     # load_percentage_for_first_x_percent_customers = 90  # Percentage of load we want on the first X customers
-
-    if math.floor(num_customers*first_x_customer_percentage/100)<1 :
-        print("Input error: first_x_customer_percentage should cover alteast 1 customer")
-        sys.exit()
-    if first_x_customer_percentage>95:
-        print("Customer percentage value is too high..")
-        sys.exit()
-    print(f"Finding optimal parameter to distribute {load_percentage_for_first_x_percent_customers}% assets to {first_x_customer_percentage}% of customers")
-    # Dynamically compute optimal base for the desired parameters
-    customer_ratio = first_x_customer_percentage/100
-    optimal_exponent = find_optimal_exponent(num_customers,load_percentage_for_first_x_percent_customers,customer_ratio)
-    # optimal_exponent = 1
     x = list(range(1, num_customers + 1))
-    y = softmax(x, optimal_exponent)
-    # print(y)
-    print(f"Optimal Exponent Value to distribute assets in desired distribution is: {optimal_exponent}")
-    print(f"First {customer_ratio*100:.1f}% of customers sum: {sum(y[:int(num_customers * customer_ratio)])}")
-    # print(f"First value assigned: {y[0]}")
-    return y
+    if num_customers == 1:
+        optimal_exponent = 1
+        print(f"Distrituting all assets to a single customer.., optimal_exponent : {optimal_exponent}")
+        return softmax(x, optimal_exponent)
+    else:
+        if math.floor(num_customers*first_x_customer_percentage/100)<1 :
+            raise ValueError("Input error: first_x_customer_percentage should cover alteast 1 customer")
+        if first_x_customer_percentage>90 or first_x_customer_percentage < 10:
+            raise ValueError("first_x_customer_percentage value is too low or high. Please increase/decrease it and try again")
+        if load_percentage_for_first_x_percent_customers>90 or load_percentage_for_first_x_percent_customers < 10:
+            raise ValueError("load_percentage_for_first_x_percent_customers value is too low or high. Please increase/decrease it and try again")
+        print(f"Finding optimal parameter to distribute {load_percentage_for_first_x_percent_customers}% assets to {first_x_customer_percentage}% of customers")
+        # Dynamically compute optimal base for the desired parameters
+        customer_ratio = first_x_customer_percentage/100
+        optimal_exponent = find_optimal_exponent(num_customers,load_percentage_for_first_x_percent_customers,customer_ratio)
+        # optimal_exponent = 1
+        
+        y = softmax(x, optimal_exponent)
+        # print(y)
+        print(f"Optimal Exponent Value to distribute assets in desired distribution is: {optimal_exponent}")
+        print(f"First {customer_ratio*100:.1f}% of customers sum: {sum(y[:int(num_customers * customer_ratio)])}")
+        # print(f"First value assigned: {y[0]}")
+        return y
 
 def adjust_allocation_to_match_total(current_segment_assets, initial_allocation):
     # Calculate the difference between the sum and total_assets
@@ -85,7 +92,8 @@ def adjust_allocation_to_match_total(current_segment_assets, initial_allocation)
     return list(initial_allocation)
 
 def return_asset_distribution(num_customers,first_x_customer_percentage,load_percentage_for_first_x_percent_customers,total_assets):
-
+    if num_customers>total_assets :
+        raise ValueError("Error: num_customers is higher than total_assets. Each customer should get atleast one asset.")
     y = load_distribution(num_customers,first_x_customer_percentage,load_percentage_for_first_x_percent_customers)
     initial_allocation = np.round(total_assets * np.array(y)/100).astype(int)
     cutoff_idx = math.floor(num_customers * first_x_customer_percentage/100)  # Cut-off index for the first X% customers
@@ -99,6 +107,7 @@ def return_asset_distribution(num_customers,first_x_customer_percentage,load_per
     print("Total assets to allocate to all customers : ",sum(assets_to_enrol_for_each_customer))
     print("Total customers to allocate assets to : ",len(assets_to_enrol_for_each_customer))
     print("Asset distribution : ",assets_to_enrol_for_each_customer)
-    print(f"First {first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
-    print(f"And The last {100-first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
+    if num_customers==1:
+        print(f"First {first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
+        print(f"And The last {100-first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
     return assets_to_enrol_for_each_customer
