@@ -1,29 +1,3 @@
 {
-    "stack": "S2",
-    "architecture": "1 X 6SU",
-    "domain": "neptune",
-    "suffix": "uptycs.net",
-    "monitoring_node_ip":"s2monitor",
-    "event_rules_per_cust": {
-        "enabled": 39,
-        "triggered": 33
-    },
-    "alert_rules_per_cust": {
-        "enabled": 39,
-        "triggered": 33
-    },
-    "execute_kafka_topics_script_in":"s2c1pn1",
-    "execute_trino_queries_in":"s2c1pn2",
-
-    "elastic_node_ip": "192.168.131.50",
-    "pgbadger_reports_mount": "opt/uptycs/etc/elk",
-
-    "kubesim_nodes": [
-        "s2simhost2c",
-        "s2simhost2b"
-    ],
-    "selfsim_nodes": [
-        "s2simhost2d"
-    ]
-
+    "domain": "neptune"
 }
