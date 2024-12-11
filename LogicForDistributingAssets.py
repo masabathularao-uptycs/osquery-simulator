@@ -95,19 +95,23 @@ def return_asset_distribution(num_customers,first_x_customer_percentage,load_per
     if num_customers>total_assets :
         raise ValueError("Error: num_customers is higher than total_assets. Each customer should get atleast one asset.")
     y = load_distribution(num_customers,first_x_customer_percentage,load_percentage_for_first_x_percent_customers)
+    print("Converting percentage values into actual assets count...")
     initial_allocation = np.round(total_assets * np.array(y)/100).astype(int)
     cutoff_idx = math.floor(num_customers * first_x_customer_percentage/100)  # Cut-off index for the first X% customers
 
-    print("Converting percentage values into actual assets count...")
-    assets_to_enrol_for_each_customer_part1 = adjust_allocation_to_match_total(int(total_assets*load_percentage_for_first_x_percent_customers/100),initial_allocation[:cutoff_idx])
-    assets_to_enrol_for_each_customer_part2 = adjust_allocation_to_match_total(int(total_assets*(100-load_percentage_for_first_x_percent_customers)/100),initial_allocation[cutoff_idx:])
-    assets_to_enrol_for_each_customer = assets_to_enrol_for_each_customer_part1 + assets_to_enrol_for_each_customer_part2
-    assets_to_enrol_for_each_customer = [int(value) for value in assets_to_enrol_for_each_customer]
+    print("Initial Allocation : ",initial_allocation)
 
+    if num_customers >1 :
+        assets_to_enrol_for_each_customer_part1 = adjust_allocation_to_match_total(int(total_assets*load_percentage_for_first_x_percent_customers/100),initial_allocation[:cutoff_idx])
+        assets_to_enrol_for_each_customer_part2 = adjust_allocation_to_match_total(int(total_assets*(100-load_percentage_for_first_x_percent_customers)/100),initial_allocation[cutoff_idx:])
+        assets_to_enrol_for_each_customer = assets_to_enrol_for_each_customer_part1 + assets_to_enrol_for_each_customer_part2
+        assets_to_enrol_for_each_customer = [int(value) for value in assets_to_enrol_for_each_customer]
+    else:
+        assets_to_enrol_for_each_customer = initial_allocation
     print("Total assets to allocate to all customers : ",sum(assets_to_enrol_for_each_customer))
     print("Total customers to allocate assets to : ",len(assets_to_enrol_for_each_customer))
     print("Asset distribution : ",assets_to_enrol_for_each_customer)
-    if num_customers==1:
+    if num_customers>1:
         print(f"First {first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
         print(f"And The last {100-first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
     return assets_to_enrol_for_each_customer
