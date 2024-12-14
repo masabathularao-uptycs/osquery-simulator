@@ -5,6 +5,7 @@ from test_input_params import test_input_params
 from flask_session import Session 
 import json
 from CreateTestinputFiles import create_testinput_files
+from helper import execute_shell_command
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = '343c855017e725321cb7f35b89c98b9e'
@@ -61,53 +62,68 @@ def get_osquery_simulator_names():
     except Exception as e:
         return jsonify({"status": "error","message": f"An unexpected error occurred: {e}"}), 500  # Internal Server Error
 
+@app.route('/execute_shell_com', methods=['GET'])
+def execute_shell_com():
+    try:
+        command = request.args.get('shell_command', '')
+        result = execute_shell_command(command)
+        return jsonify({"status": "success","message": f"Successfully executed {command} command on {hostname}","result":result}), 200  # Internal Server Error
+
+    except Exception as e:
+        return jsonify({"status": "error","message": f"An unexpected error occurred: {e}",}), 500  # Internal Server Error
+
+
 @app.route('/check_sim_health', methods=['GET'])
 def check_sim_health():
-    import subprocess
-
     bash_commands = {
-        "endpointsim": "ps -ef | grep endpointsim -c",
-        "node": "ps -ef | grep node -c",
+        "endpointsim": "ps -ef | grep endpointsim | grep domain | grep secret | grep -v grep -c",
+        "node": "ps -ef | grep node | grep domain | grep secret | grep -v grep -c",
     }
     command_outputs = {}
 
     try:
         testinput_result = {}
+        expected_instances = 0
+        expected_assets = 0
         if os.path.exists(testinput_file):
             try:
                 with open(testinput_file, 'r') as json_file:
                     testinput_file_contents = json.load(json_file)
                 instances = testinput_file_contents["instances"]
                 for instance in instances:
+                    expected_instances+=1
+                    expected_assets+=instance["clients"]
                     testinput_result[instance["domain"]] = instance["clients"]
             except Exception as e:
                 print(f"Error while processing {testinput_file} contents")
         # Execute each bash command and collect the output
         for sim_type, command in bash_commands.items():
-            try:
-                result = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                if result.returncode == 0:
-                    command_outputs[sim_type] = result.stdout.strip()
-                else:
-                    command_outputs[sim_type] = f"Error: {result.stderr.strip()}"
-            except Exception as e:
-                command_outputs[sim_type] = f"Error executing command '{command}': {e}"
-
-        # If no output could be retrieved for any simulator
-        if not command_outputs:
-            return jsonify({"status": "error","message": "Failed to retrieve simulator health information.",}), 500  # Internal Server Error
-
+            command_outputs[sim_type] = execute_shell_command(command)
+        try:
+            main_params = [
+                ("live endpointsim instances", command_outputs.get("endpointsim", "endpointsim key not found in command_outputs dict")),
+                ("expected instances", expected_instances),
+                ("assets to enroll", expected_assets),
+                ("endline", test_input_params.get("endline", "endline key not found in test_input_params dict")),
+                ("inputfile", test_input_params.get("inputfile", "inputfile key not found in test_input_params dict")),
+            ]
+        except Exception as e:
+            print(f"key not found error while creating main_params dictionary: {e}")
+            main_params={}
         # Success response with command outputs
         return jsonify({
             "status": "success",
             "message": f"Successfully fetched {hostname} health information.",
-            "command_outputs": command_outputs,
-            "test_input_params":test_input_params,
-            "testinput_content":testinput_result
+            "table_data_result":{
+                "process_instances": command_outputs,
+                "domain_count":testinput_result,
+                "parameter_value":test_input_params
+            },
+            "main_params":main_params
         }), 200  # OK
 
     except Exception as e:
-        return jsonify({"status": "error","message": f"An unexpected error occurred: {e}",}), 500  # Internal Server Error
+        return jsonify({"status": "error","message": f"An unexpected error occurred while checking health of {hostname}: {e}",}), 500  # Internal Server Error
 
 
 @app.route('/update_load_params', methods=['POST'])
@@ -115,9 +131,10 @@ def update_load_params():
     try:
         # Get the incoming form data
         updated_params = request.form.to_dict()
-
+        only_for_validation = updated_params.get("only_for_validation",False)
+        print(not only_for_validation)
         if not updated_params:
-            return jsonify({"status": "error","message": "No parameters provided in the request."}), 400  # Bad Request
+            return jsonify({"status": "error","message": "No formdata is provided to update."}), 400  # Bad Request
 
         # Dynamically cast and validate the input
         for key, value in updated_params.items():
@@ -139,25 +156,31 @@ def update_load_params():
                     # Log and ignore type conversion errors
                     print(f"Invalid value for key '{key}': expected {current_type.__name__}." , e)
 
-        # Update the global dictionary
-        test_input_params.update(updated_params)
-
-        # Save the updated dictionary back to the Python file
-        try:
-            with open("test_input_params.py", 'w') as f:
-                f.write("test_input_params = " + json.dumps(test_input_params, indent=4))
-        except (IOError, OSError) as file_error:
-            return jsonify({"status": "error","message": f"Failed to write to file: {str(file_error)}"}), 500  # Internal Server Error
-
+        
         # Call the function with updated parameters
         try:
-            create_testinput_files(test_input_params["stack_json_file"])
-        except KeyError as key_error:
-            return jsonify({"status": "error","message": f"Missing required key: {str(key_error)}"}), 400  # Bad Request
-        except Exception as e:
-            return jsonify({"status": "error","message": f"Failed to create new test input files: {str(e)}"}), 500  # Internal Server Error
+            if "stack_json_file" not in test_input_params:
+                return jsonify({"status": "error","message": f"Missing required key: 'stack_json_file' not present in test_input_params"}), 400  # Bad Request
+            return_dict = create_testinput_files(updated_params,do_update=not only_for_validation)
+            
+            if not only_for_validation:
+                # Update the global dictionary
+                test_input_params.update(updated_params)
+                    
+                try:
+                    # Save the updated dictionary back to the Python file
+                    with open("test_input_params.py", 'w') as f:
+                        f.write("test_input_params = " + json.dumps(test_input_params, indent=4))
+                except (IOError, OSError) as file_error:
+                    return jsonify({"status": "error","message": f"Failed to write to file: {str(file_error)}"}), 500  # Internal Server Error
 
-        return jsonify({"status": "success","message": f"Parameters for {hostname} updated successfully. Please click on refresh button to view latest simulator parameters"}), 200  # OK
+                return jsonify({"status": "success","message": f"Parameters for {hostname} updated successfully. Please click on refresh button to view latest simulator parameters"}), 200  # OK
+            else:
+                return jsonify({"status": "success","message": f"Asset distribution logic calculated." , "asset_dist_data":return_dict}), 200  # OK
+
+        except Exception as e:
+            return jsonify({"status": "error","message": f"Error while calling create_testinput_files(): {str(e)}"}), 500  # Internal Server Error
+
 
     except Exception as e:
         return jsonify({"status": "error","message": f"An unexpected error occurred: {str(e)}"}), 500  # Internal Server Error

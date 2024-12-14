@@ -6,3 +6,6 @@ hostnames
 flask_session
 simulator_venv
 test.py
+testinput_json_files/*
+original_go_simulator
+python_simulator_ignore

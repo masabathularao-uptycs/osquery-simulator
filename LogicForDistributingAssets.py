@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize import root_scalar
-import math
+import math,json
 # import sys
 
 def softmax(x, base):
@@ -62,6 +62,7 @@ def load_distribution(num_customers,first_x_customer_percentage,load_percentage_
         # print(y)
         print(f"Optimal Exponent Value to distribute assets in desired distribution is: {optimal_exponent}")
         print(f"First {customer_ratio*100:.1f}% of customers sum: {sum(y[:int(num_customers * customer_ratio)])}")
+
         # print(f"First value assigned: {y[0]}")
         return y
 
@@ -91,7 +92,12 @@ def adjust_allocation_to_match_total(current_segment_assets, initial_allocation)
 
     return list(initial_allocation)
 
-def return_asset_distribution(num_customers,first_x_customer_percentage,load_percentage_for_first_x_percent_customers,total_assets):
+def return_asset_distribution(updated_test_input_params):
+    return_dict = {}
+    num_customers = updated_test_input_params["num_customers"]
+    first_x_customer_percentage = updated_test_input_params["first_x_customer_percentage"]
+    load_percentage_for_first_x_percent_customers = updated_test_input_params["load_percentage_for_first_x_percent_customers"]
+    total_assets = updated_test_input_params["total_number_of_assets"]
     if num_customers>total_assets :
         raise ValueError("Error: num_customers is higher than total_assets. Each customer should get atleast one asset.")
     y = load_distribution(num_customers,first_x_customer_percentage,load_percentage_for_first_x_percent_customers)
@@ -108,10 +114,20 @@ def return_asset_distribution(num_customers,first_x_customer_percentage,load_per
         assets_to_enrol_for_each_customer = [int(value) for value in assets_to_enrol_for_each_customer]
     else:
         assets_to_enrol_for_each_customer = initial_allocation
-    print("Total assets to allocate to all customers : ",sum(assets_to_enrol_for_each_customer))
-    print("Total customers to allocate assets to : ",len(assets_to_enrol_for_each_customer))
-    print("Asset distribution : ",assets_to_enrol_for_each_customer)
+    if min(assets_to_enrol_for_each_customer) == 0:
+        raise ValueError(f"{assets_to_enrol_for_each_customer.count(0)} customers are getting 0 assets. Each customer should get at least one asset allocated.")
+    # print("Total assets to allocate to all customers : ",sum(assets_to_enrol_for_each_customer))
+    # print("Total customers to allocate assets to : ",len(assets_to_enrol_for_each_customer))
+    # print("Asset distribution : ",assets_to_enrol_for_each_customer)
+
+    return_dict["1.Total assets to enroll"] = int(sum(assets_to_enrol_for_each_customer))
+    return_dict["2.Total number of customers"] = len(assets_to_enrol_for_each_customer)
+    return_dict["3.Asset Distribution for each customer"] = str(assets_to_enrol_for_each_customer)
+
     if num_customers>1:
-        print(f"First {first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
-        print(f"And The last {100-first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
-    return assets_to_enrol_for_each_customer
+        # print(f"First {first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
+        # print(f"And The last {100-first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
+        return_dict[f"4.First {first_x_customer_percentage:.1f}% ({int(num_customers * first_x_customer_percentage/100)}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets."
+        return_dict[f"5.And The last {100-first_x_customer_percentage:.1f}% ({int(num_customers)-(int(num_customers * first_x_customer_percentage/100))}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. "
+    print(return_dict)
+    return assets_to_enrol_for_each_customer,return_dict
