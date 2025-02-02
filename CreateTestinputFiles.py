@@ -84,6 +84,7 @@ def create_testinput_files(updated_test_input_params, do_update = False):
                 # "names":"names.txt"
             })
             clients_to_enrol_to_this_cust-=300
+            i+=1
 
     # split_instances = np.array_split(instances, len(simulators))
     # split_instances = [list(arr) for arr in split_instances]

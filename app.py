@@ -93,7 +93,10 @@ def check_sim_health():
                 for instance in instances:
                     expected_instances+=1
                     expected_assets+=instance["clients"]
-                    testinput_result[instance["domain"]] = instance["clients"]
+                    if instance["domain"] in testinput_result:
+                        testinput_result[instance["domain"]] += instance["clients"]
+                    else:
+                        testinput_result[instance["domain"]] = instance["clients"]
             except Exception as e:
                 print(f"Error while processing {testinput_file} contents")
         # Execute each bash command and collect the output
