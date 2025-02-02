@@ -25,8 +25,8 @@ NOTE : Make sure to Install all the python dependency packages if missing on you
 
 # Pull latest code from github to simulator machines
 
-    ```
-    for i in machine1 machine2 machine3 ; do ssh abacus@$i "cd ~/osquery-simulator && git pull origin main && echo \"Git pull on $i successful\"";done
-    ```
+```
+for i in machine1 machine2 machine3 ; do ssh abacus@$i "cd ~/osquery-simulator && git pull origin main && echo \"Git pull on $i successful\"";done
+```
 
 ---
