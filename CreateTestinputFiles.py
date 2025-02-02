@@ -56,6 +56,8 @@ def create_testinput_files(updated_test_input_params, do_update = False):
     base_domain = json_file["domain"]
     configdb_node = json_file["configdb_node"]
 
+    return_dict["3. Number of simulators configured"] = len(simulators)
+
     if not os.path.exists(f"{SECRETS_JSONS_PATH}/{base_domain}.json"):
         print(f"Secrets not found for {base_domain}, collecting secret keys...")
         collect_secretkeys(configdb_node,base_domain)

@@ -2,15 +2,15 @@ from flask import Flask, request, jsonify
 import os
 from simulator_config_vars import SIMULATOR_SERVER_PORT,STACK_JSONS_PATH,hostname,testinput_file
 from test_input_params import test_input_params
-from flask_session import Session 
+# from flask_session import Session 
 import json
 from CreateTestinputFiles import create_testinput_files
 from helper import execute_shell_command
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = '343c855017e725321cb7f35b89c98b9e'
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+# app.config['SESSION_TYPE'] = 'filesystem'
+# Session(app)
 
 OSQUERY_DATA_LOAD_NAMES = ["multicustomer","singlecustomer"]
 OSQUERY_CONTROLPLANE_LOAD_NAMES = ["controlplane"]

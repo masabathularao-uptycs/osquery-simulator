@@ -122,12 +122,12 @@ def return_asset_distribution(updated_test_input_params):
 
     return_dict["1.Total assets to enroll"] = int(sum(assets_to_enrol_for_each_customer))
     return_dict["2.Total number of customers"] = len(assets_to_enrol_for_each_customer)
-    return_dict["3.Asset Distribution for each customer"] = str(assets_to_enrol_for_each_customer)
+    return_dict["4.Asset Distribution for each customer"] = str(assets_to_enrol_for_each_customer)
 
     if num_customers>1:
         # print(f"First {first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
         # print(f"And The last {100-first_x_customer_percentage:.1f}% of customers gets : {sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. ")
-        return_dict[f"4.First {first_x_customer_percentage:.1f}% ({int(num_customers * first_x_customer_percentage/100)}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets."
-        return_dict[f"5.And The last {100-first_x_customer_percentage:.1f}% ({int(num_customers)-(int(num_customers * first_x_customer_percentage/100))}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. "
+        return_dict[f"5.First {first_x_customer_percentage:.1f}% ({int(num_customers * first_x_customer_percentage/100)}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets."
+        return_dict[f"6.And The last {100-first_x_customer_percentage:.1f}% ({int(num_customers)-(int(num_customers * first_x_customer_percentage/100))}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. "
     print(return_dict)
     return assets_to_enrol_for_each_customer,return_dict
