@@ -116,7 +116,11 @@ def check_sim_health():
             print(f"key not found error while creating main_params dictionary: {e}")
             main_params={}
         # Success response with command outputs
-        load_duration_in_sec = int(test_input_params["endline"]*2)
+        try:
+            remaining_load_duration = int(test_input_params["endline"]*2) - int(command_outputs["LoadTrigger"])
+        except:
+            remaining_load_duration=0
+    
         return jsonify({
             "status": "success",
             "message": f"Successfully fetched {hostname} health information.",
@@ -126,7 +130,7 @@ def check_sim_health():
                 "parameter_value":test_input_params
             },
             "main_params":main_params,
-            "load_remaining_dur_in_sec":load_duration_in_sec-int(command_outputs["LoadTrigger"])
+            "load_remaining_dur_in_sec":remaining_load_duration
         }), 200  # OK
 
     except Exception as e:
