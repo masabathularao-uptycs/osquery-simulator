@@ -19,7 +19,9 @@ NOTE : Make sure to Install all the python dependency packages if missing on you
 
     Start the server in multiple machines (incase of multiple simulator machines):
     ```
-    for i in machine1 machine2 machine3 ; do ssh abacus@$i "echo $i; nohup python3 ~/osquery-simulator/app.py &> simulator_server.out &";done
+    for i in machine1 machine2 machine3; do
+        ssh abacus@$i "cd ~/osquery-simulator && nohup python3 app.py > simulator_server.out 2>&1 & disown && echo 'Started server on $i'"
+    done
     ```
 <br>
 

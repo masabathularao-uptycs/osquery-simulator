@@ -78,6 +78,8 @@ def check_sim_health():
     bash_commands = {
         "endpointsim": "ps -ef | grep endpointsim | grep domain | grep secret | grep -v grep -c",
         "node": "ps -ef | grep node | grep domain | grep secret | grep -v grep -c",
+        "LoadTrigger": "ps -eo etimes,cmd | grep 'osquery-simulator/LoadTrigger.py' | grep -v grep | awk '{print $1}'",
+
     }
     command_outputs = {}
 
@@ -114,6 +116,7 @@ def check_sim_health():
             print(f"key not found error while creating main_params dictionary: {e}")
             main_params={}
         # Success response with command outputs
+        load_duration_in_sec = int(test_input_params["endline"]*2)
         return jsonify({
             "status": "success",
             "message": f"Successfully fetched {hostname} health information.",
@@ -122,7 +125,8 @@ def check_sim_health():
                 "domain_count":testinput_result,
                 "parameter_value":test_input_params
             },
-            "main_params":main_params
+            "main_params":main_params,
+            "load_remaining_dur_in_sec":load_duration_in_sec-int(command_outputs["LoadTrigger"])
         }), 200  # OK
 
     except Exception as e:
