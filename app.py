@@ -79,7 +79,7 @@ def check_sim_health():
         "endpointsim": "ps -ef | grep endpointsim | grep domain | grep secret | grep -v grep -c",
         "node": "ps -ef | grep node | grep domain | grep secret | grep -v grep -c",
         "LoadTrigger": "ps -ef | grep 'simulator/LoadTrigger.py' | grep -v grep -c",
-        "load_running_since_sec": "ps -eo etimes,cmd | grep 'simulator/LoadTrigger.py' | grep -v grep | awk '{print $1}' | sort -nr | head -n 1",
+        "load_running_since_sec": "ps -eo etimes,cmd | grep 'simulator/LoadTrigger.py' | grep -v grep | awk '{print $1}' | sort -n | head -n 1",
 
     }
     command_outputs = {}
