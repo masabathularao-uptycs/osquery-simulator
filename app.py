@@ -118,7 +118,7 @@ def check_sim_health():
             main_params={}
         # Success response with command outputs
         try:
-            remaining_load_duration = int(test_input_params["endline"]*2) - int(command_outputs["load_running_since_sec"])
+            remaining_load_duration = int(test_input_params["endline"]*2) - int(str(command_outputs["load_running_since_sec"]).split(" ")[-1])
         except:
             remaining_load_duration=0
     
