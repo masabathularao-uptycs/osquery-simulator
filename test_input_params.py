@@ -5,7 +5,7 @@ test_input_params = {
     "first_x_customer_percentage": 50,
     "load_percentage_for_first_x_percent_customers": 50,
     "inputfile": "rhel7-6tab_12rec.log",
-    "endline": 18000,
+    "endline": 50,
     "time": "0000-01-02-01-01",
     "startline": 0,
     "delaybetweentrigger": 4,

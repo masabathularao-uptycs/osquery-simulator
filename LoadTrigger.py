@@ -142,6 +142,7 @@ if linenumber == 0:
           print("--------------")
       statsflag=False
     else:
+        print(f"Error: Input File '{input_file_path}' does not exist.")
         raise f"Error: Input File '{input_file_path}' does not exist."      
 
 
