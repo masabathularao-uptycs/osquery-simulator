@@ -9,3 +9,4 @@ test.py
 testinput_json_files/*
 original_go_simulator
 python_simulator_ignore
+test_input_params.py
