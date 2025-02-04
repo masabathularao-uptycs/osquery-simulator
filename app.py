@@ -78,7 +78,8 @@ def check_sim_health():
     bash_commands = {
         "endpointsim": "ps -ef | grep endpointsim | grep domain | grep secret | grep -v grep -c",
         "node": "ps -ef | grep node | grep domain | grep secret | grep -v grep -c",
-        "LoadTrigger": "ps -eo etimes,cmd | grep 'osquery-simulator/LoadTrigger.py' | grep -v grep | awk '{print $1}'",
+        "LoadTrigger": "ps -ef | grep 'simulator/LoadTrigger.py' | grep -v grep -c",
+        "load_running_since_sec": "ps -eo etimes,cmd | grep 'simulator/LoadTrigger.py' | grep -v grep | awk '{print $1}'",
 
     }
     command_outputs = {}
@@ -117,7 +118,7 @@ def check_sim_health():
             main_params={}
         # Success response with command outputs
         try:
-            remaining_load_duration = int(test_input_params["endline"]*2) - int(command_outputs["LoadTrigger"])
+            remaining_load_duration = int(test_input_params["endline"]*2) - int(command_outputs["load_running_since_sec"])
         except:
             remaining_load_duration=0
     
