@@ -8,6 +8,7 @@ import threading
 import requests
 from simulator_config_vars import testinput_file,TESTINPUT_FILES_PATH
 from test_input_params import test_input_params
+import os
 
 global datastats_action
 global record_count
@@ -99,43 +100,49 @@ if linenumber == 0:
       unix_timestamp = int(time.mktime(datetime_object.timetuple()))
       print(f"year provided is {Time[0]}, so using provided unix_timestamp : ", unix_timestamp)
 
-    with open(TESTINPUT_FILES_PATH/test_input_params['inputfile']) as fs:
-      startline=test_input_params['startline']
-      if startline != 0:
-        print('start skipping lines')
-        logging.warning("skipping "+str(startline) +" lines")
-        for Line in range(0,startline-1):
-          linebuffer=fs.readline()
+
+    input_file_path = os.path.join(TESTINPUT_FILES_PATH, test_input_params['inputfile'])
+
+    if os.path.isfile(input_file_path):
+      with open(input_file_path) as fs:
+        startline=test_input_params['startline']
+        if startline != 0:
+          print('start skipping lines')
+          logging.warning("skipping "+str(startline) +" lines")
+          for Line in range(0,startline-1):
+            linebuffer=fs.readline()
+            linenumber+=1
+
+          if len(linebuffer) < 30:
+            linebuffer=fs.readline()
+            linenumber+=1
+        if firstline == 0:
+          first_ts=fs.readline()
           linenumber+=1
 
-        if len(linebuffer) < 30:
-          linebuffer=fs.readline()
-          linenumber+=1
-      if firstline == 0:
-        first_ts=fs.readline()
-        linenumber+=1
+        while True:
+          message,second_ts=fs.readline(),fs.readline()
+          message=message.strip('\n')
+          linenumber+=2
+          if len(message)==0 or len(second_ts)== 0:break
+          
+          starttimestr=str(int(unix_timestamp+delaybetweentrigger))
+          final_message=starttimestr + message
 
-      while True:
-        message,second_ts=fs.readline(),fs.readline()
-        message=message.strip('\n')
-        linenumber+=2
-        if len(message)==0 or len(second_ts)== 0:break
-        
-        starttimestr=str(int(unix_timestamp+delaybetweentrigger))
-        final_message=starttimestr + message
-
-        if len(final_message) > 50065000:
-          logging.warning("Line number : " +str(linenumber) + ',length of logger msg : ' + str(len(final_message)))
-          continue
-        logging.warning("Line number : " +str(linenumber) + ',tstamp : ' + starttimestr + ' ' + str(len(final_message)))
-        analyse(message)
-        _thread.start_new_thread(SendTrigger, (final_message,portlist))
-        time.sleep(delaybetweentrigger)
-        if endline != 0:
-           if endline <= linenumber:
-              break
-        print("--------------")
-    statsflag=False      
+          if len(final_message) > 50065000:
+            logging.warning("Line number : " +str(linenumber) + ',length of logger msg : ' + str(len(final_message)))
+            continue
+          logging.warning("Line number : " +str(linenumber) + ',tstamp : ' + starttimestr + ' ' + str(len(final_message)))
+          analyse(message)
+          _thread.start_new_thread(SendTrigger, (final_message,portlist))
+          time.sleep(delaybetweentrigger)
+          if endline != 0:
+            if endline <= linenumber:
+                break
+          print("--------------")
+      statsflag=False
+    else:
+        raise f"Error: Input File '{input_file_path}' does not exist."      
 
 
 else:
