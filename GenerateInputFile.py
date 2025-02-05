@@ -1,16 +1,16 @@
 import random, os
 import json
 from LogicForDistributingAssets import return_asset_distribution
-from simulator_config_vars import unit_load_time_in_mins, num_tables_per_msg , osquery_template_file, num_records_per_table, INPUT_FILES_PATH
-from datetime import datetime
+from simulator_config_vars import *
+# from datetime import datetime
 
 unit_loadtime_in_sec = unit_load_time_in_mins*60
-num_of_msgs_to_form = unit_loadtime_in_sec//2
+num_of_msgs_to_form = unit_loadtime_in_sec//DELAY_BETWEEN_TRIGGER
 number_of_tables_to_create = num_of_msgs_to_form*num_tables_per_msg
 
 print(number_of_tables_to_create)
 
-with open(osquery_template_file) as tf:
+with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
     osq_template_data = json.load(tf)
 
 all_tables = list(osq_template_data.keys())
@@ -24,6 +24,7 @@ updated_test_input_params = {
 
 weightage_of_each_table,_  = return_asset_distribution(updated_test_input_params)
 
+print(all_tables)
 print(weightage_of_each_table)
 print(len(weightage_of_each_table))
 print(sum(weightage_of_each_table))
@@ -61,14 +62,14 @@ final_collection = shuffle_and_split(get_complete_collection(weightage_of_each_t
 print(final_collection)
 
 
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-dest_file = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
+dest_file = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_of_msgs_to_form}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
 out_fd = open(dest_file, "w")
 
 
 def create_record_for_grpc_orig(js_line, table, recs_per_table):
-    print(recs_per_table)
+    # print(recs_per_table)
     rand_action = random.choice(list(osq_template_data[table].keys()))
     js_line["action"] = rand_action
     tmp = osq_template_data[table][rand_action]
@@ -104,8 +105,8 @@ for msg in final_collection:
         # pass
         js_line = create_record_for_grpc_orig(js_line, table, num_records_per_table)
     if js_line:
-        print("writing")
-        out_fd.write(now)
-        out_fd.write("\n")
+        # print("writing")
+        # out_fd.write(now)
+        # out_fd.write("\n")
         out_fd.write(json.dumps(js_line))
         out_fd.write("\n")

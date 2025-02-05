@@ -1,7 +1,7 @@
 import json
 import sys
 import subprocess
-from simulator_config_vars import ROOT_PATH,HOSTNAMES_FILES_PATH,testinput_file
+from simulator_config_vars import ROOT_PATH,HOSTNAMES_FILES_PATH,testinput_file, TIME_BETWEEN_INSTANCE_ENROLLMENT
 from test_input_params import test_input_params
 from create_hostnames import generate  
 import os
@@ -86,7 +86,7 @@ for eachinstance in instance_list:
    print(loadcmd)
    Fd.write(loadcmd +'\n')
    # Fd.write("sleep 10" +'\n')
-   Fd.write("sleep " + str(test_input_params["time_between_instance_seconds"]) +'\n')
+   Fd.write("sleep " + str(TIME_BETWEEN_INSTANCE_ENROLLMENT) +'\n')
 Fd.write("sleep 20" +'\n')   
 Fd.close()
 subprocess.getoutput("chmod 777 executeload.sh")

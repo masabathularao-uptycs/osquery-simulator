@@ -6,14 +6,12 @@ import logging
 import _thread
 import threading
 import requests
-from simulator_config_vars import testinput_file,INPUT_FILES_PATH
+from simulator_config_vars import testinput_file,INPUT_FILES_PATH, DELAY_BETWEEN_TRIGGER
 from test_input_params import test_input_params
 import os
 
 global datastats_action
 global record_count
-global statsflag
-global linenumber
 
 record_count=0
 datastats_action={}
@@ -23,15 +21,6 @@ statsflag=True
 logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s - %(message)s')
 
 LOCAL_HOST = "127.0.0.1"
-
-
-def statsdump():
-    global linenumber
-    global statsflag
-    while statsflag:
-      time.sleep(100)
-      logging.warning(linenumber)
-      logging.warning(datastats_action)
 
 def analyse(message):
         global record_count
@@ -65,9 +54,6 @@ def SendTrigger(msg,portlist):
     for Port in portlist:
       _thread.start_new_thread(actual_send, (msg,Port))
 
-thread_to_print_stats = threading.Timer(30.0, statsdump)
-thread_to_print_stats.start()  
-
 try:
    with open(testinput_file) as f:
       data = f.read()
@@ -76,119 +62,60 @@ except Exception as e:
     print(f"Error occured while processing  {testinput_file}",e)
     sys.exit(1)
     
-instance=testinput_contents['instances']
-endline=test_input_params['endline']
-delaybetweentrigger = test_input_params['delaybetweentrigger']
+all_instances=testinput_contents['instances']
+# duration_of_load_in_sec = test_input_params['duration_of_load_in_sec']
+# how_many_msgs_to_send = duration_of_load_in_sec // DELAY_BETWEEN_TRIGGER
 
-print("Total duration of the load in seconds: ", endline*delaybetweentrigger/2)
+how_many_msgs_to_send = test_input_params['how_many_msgs_to_send']
+
+input_file_path = os.path.join(INPUT_FILES_PATH, test_input_params['inputfile'])
+if not os.path.isfile(input_file_path):
+  print(f"Error: Input File '{input_file_path}' does not exist.")
+  raise f"Error: Input File '{input_file_path}' does not exist."     
+
+
+Time=test_input_params['time'].split('-')
+if Time[0] == '0000':
+  unix_timestamp=int(time.time())
+  print(f"year provided is {Time[0]}, new unix_timestamp generated is : ", unix_timestamp)
+else:
+  year,month,day,hr,minute=int(Time[0]),int(Time[1]),int(Time[2]),int(Time[3]),int(Time[4])
+  datetime_object = datetime.datetime(year,month,day,hr,minute)
+  unix_timestamp = int(time.mktime(datetime_object.timetuple()))
+  print(f"year provided is {Time[0]}, so using provided unix_timestamp : ", unix_timestamp)
+
 portlist=[]
-for eachinstance in instance:
+for eachinstance in all_instances:
    portlist.append(eachinstance['port'])
 
-linenumber=test_input_params['linenumber']
-
-if linenumber == 0:
-    print("playing full file...")
-    firstline=0
-    Time=test_input_params['time'].split('-')
-    if Time[0] == '0000':
-      unix_timestamp=int(time.time())
-      print(f"year provided is {Time[0]}, new unix_timestamp generated is : ", unix_timestamp)
-    else:
-      year,month,day,hr,minute=int(Time[0]),int(Time[1]),int(Time[2]),int(Time[3]),int(Time[4])
-      datetime_object = datetime.datetime(year,month,day,hr,minute)
-      unix_timestamp = int(time.mktime(datetime_object.timetuple()))
-      print(f"year provided is {Time[0]}, so using provided unix_timestamp : ", unix_timestamp)
-
-
-    input_file_path = os.path.join(INPUT_FILES_PATH, test_input_params['inputfile'])
-
-    if os.path.isfile(input_file_path):
-      with open(input_file_path) as fs:
-        startline=test_input_params['startline']
-        if startline != 0:
-          print('start skipping lines')
-          logging.warning("skipping "+str(startline) +" lines")
-          for Line in range(0,startline-1):
-            linebuffer=fs.readline()
-            linenumber+=1
-
-          if len(linebuffer) < 30:
-            linebuffer=fs.readline()
-            linenumber+=1
-        if firstline == 0:
-          first_ts=fs.readline()
-          linenumber+=1
-
-        while True:
-          message,second_ts=fs.readline(),fs.readline()
-          message=message.strip('\n')
-          linenumber+=2
-          if len(message)==0 or len(second_ts)== 0:break
+iteration_count = 1
+while how_many_msgs_to_send:
+  print(f"Iterating inputfile ... , iteration count is {iteration_count}")
+  with open(input_file_path) as fs:
+      while how_many_msgs_to_send:
+          current_msg = fs.readline().strip('\n')
+          # Break if the end of the file is reached
+          if not current_msg:
+              logging.warning("reached end of input file, breaking the loop")
+              break
           
-          starttimestr=str(int(unix_timestamp+delaybetweentrigger))
-          final_message=starttimestr + message
+          unix_timestamp+=DELAY_BETWEEN_TRIGGER
+          final_message= str(int(unix_timestamp)) + current_msg
 
+          logging.warning(f"msgs remaining to send : {how_many_msgs_to_send}, timestamp : {unix_timestamp}, length of logger msgs : {str(len(final_message))}")
           if len(final_message) > 50065000:
-            logging.warning("Line number : " +str(linenumber) + ',length of logger msg : ' + str(len(final_message)))
+            logging.warning(f"WARNING : length of msg exceeded 50065000, so skipping this msg")
             continue
-          logging.warning("Line number : " +str(linenumber) + ',tstamp : ' + starttimestr + ' ' + str(len(final_message)))
-          analyse(message)
+          
+          analyse(current_msg)
           _thread.start_new_thread(SendTrigger, (final_message,portlist))
-          time.sleep(delaybetweentrigger)
-          if endline != 0:
-            if endline <= linenumber:
-                break
-          print("--------------")
-          logging.warning("endline completed.. printing final statsdump")
-          logging.warning(linenumber)
-          logging.warning(datastats_action)
-      statsflag=False
-    else:
-        print(f"Error: Input File '{input_file_path}' does not exist.")
-        raise f"Error: Input File '{input_file_path}' does not exist."      
+          # print(current_msg[:10])  # Process the line if needed
+          how_many_msgs_to_send -= 1
+          if how_many_msgs_to_send%20 == 0:
+            logging.warning(datastats_action)
+          time.sleep(DELAY_BETWEEN_TRIGGER)
 
-
-else:
-    count=0
-    print("play single log message")
-    TimeCon=test_input_params['time']
-    Time= TimeCon.split('-')
-    if Time[0] == '0000':
-      unixtime=int(str(time.time()).split('.')[0])
-    else:
-      year=int(Time[0])
-      month=int(Time[1])
-      day=int(Time[2])
-      hr=int(Time[3])
-      minute=int(Time[4])
-      d = datetime.datetime(year,month,day,hr,minute)
-      unixtime = int(time.mktime(d.timetuple()))
-    begtime=int(str(time.time()).split('.')[0])
-    with open(INPUT_FILES_PATH/test_input_params['inputfile']) as f:
-      for Line in range(0,int(test_input_params['linenumber'])):
-          message = f.readline().strip('\n')
-    for no in range(0,int(test_input_params['numberoftriggers'])):
-     curtime=int(str(time.time()).split('.')[0]) 
-     difftime=curtime-begtime
-     newtime=unixtime+difftime
-     TS=str(newtime).split('.')[0]
-     print(TS)
-     final_message=TS + message
-     count=count+1
-     print((count,len(final_message)))
-     if len(final_message) > 65000:
-        continue
-     if len(final_message) == 10:
-        print(("reading data is done",count))
-        break
-     if test_input_params['delaybetweentrigger'] == '0':
-        delay=1
-     else:
-         delay=int(test_input_params['delaybetweentrigger'])
-     time.sleep(delay)
-     analyse(message)
-     logging.warning("trigger no: " +str(no))
-     for Port in portlist:
-        _thread.start_new_thread(actual_send, (final_message,Port))
-    statsflag=False
+logging.warning(f"Reached End of load, how_many_msgs_to_send:{how_many_msgs_to_send} ")
+logging.warning(datastats_action)
+logging.warning(datastats)
+logging.warning(f"input file is iterated {iteration_count} times")
