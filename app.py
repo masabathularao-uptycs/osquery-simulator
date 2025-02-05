@@ -125,7 +125,7 @@ def check_sim_health():
             main_params={}
         # Success response with command outputs
         try:
-            remaining_load_duration = int(test_input_params["endline"]*2) - int(command_outputs["load_running_since_sec"])
+            remaining_load_duration = int(test_input_params["how_many_msgs_to_send"]*DELAY_BETWEEN_TRIGGER) - int(command_outputs["load_running_since_sec"])
         except:
             remaining_load_duration=0
     
