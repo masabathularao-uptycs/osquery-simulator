@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import os
-from simulator_config_vars import SIMULATOR_SERVER_PORT,STACK_JSONS_PATH,hostname,testinput_file, DELAY_BETWEEN_TRIGGER 
+from simulator_config_vars import SIMULATOR_SERVER_PORT,STACK_JSONS_PATH,hostname,testinput_file, DELAY_BETWEEN_TRIGGER ,INPUT_FILES_PATH
 from test_input_params import test_input_params
 # from flask_session import Session 
 import json
@@ -53,7 +53,8 @@ def get_osquery_simulator_names():
         return jsonify({
             "status": "success",
             "message": f"Successfully fetched the simulator list for {stack_json_file_name} - {loadname} load",
-            "result_data": return_sims
+            "result_data": return_sims,
+            "input_files": os.listdir(INPUT_FILES_PATH)
         }), 200  # OK
 
     except json.JSONDecodeError as e:
