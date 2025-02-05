@@ -11,7 +11,7 @@ STACK_JSONS_PATH = os.path.join(ROOT_PATH,'stacks')
 SECRETS_JSONS_PATH = os.path.join(ROOT_PATH,'secrets')
 TESTINPUT_FILES_PATH = os.path.join(ROOT_PATH,'testinput_json_files')
 HOSTNAMES_FILES_PATH = os.path.join(ROOT_PATH,'hostnames')
-INPUT_FILES_PATH = os.path.join(ROOT_PATH,'input_files')
+INPUT_FILES_PATH = os.path.join(ROOT_PATH,'inputfiles')
 
 hostname = subprocess.run("hostname",shell=True,capture_output=True,text=True).stdout.strip()
 testinput_file = os.path.join(TESTINPUT_FILES_PATH,f"{hostname}_testinput.json")

@@ -6,7 +6,7 @@ import logging
 import _thread
 import threading
 import requests
-from simulator_config_vars import testinput_file,TESTINPUT_FILES_PATH
+from simulator_config_vars import testinput_file,INPUT_FILES_PATH
 from test_input_params import test_input_params
 import os
 
@@ -101,7 +101,7 @@ if linenumber == 0:
       print(f"year provided is {Time[0]}, so using provided unix_timestamp : ", unix_timestamp)
 
 
-    input_file_path = os.path.join(TESTINPUT_FILES_PATH, test_input_params['inputfile'])
+    input_file_path = os.path.join(INPUT_FILES_PATH, test_input_params['inputfile'])
 
     if os.path.isfile(input_file_path):
       with open(input_file_path) as fs:
@@ -162,7 +162,7 @@ else:
       d = datetime.datetime(year,month,day,hr,minute)
       unixtime = int(time.mktime(d.timetuple()))
     begtime=int(str(time.time()).split('.')[0])
-    with open(TESTINPUT_FILES_PATH/test_input_params['inputfile']) as f:
+    with open(INPUT_FILES_PATH/test_input_params['inputfile']) as f:
       for Line in range(0,int(test_input_params['linenumber'])):
           message = f.readline().strip('\n')
     for no in range(0,int(test_input_params['numberoftriggers'])):
