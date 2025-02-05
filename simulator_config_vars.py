@@ -15,3 +15,8 @@ INPUT_FILES_PATH = os.path.join(ROOT_PATH,'input_files')
 
 hostname = subprocess.run("hostname",shell=True,capture_output=True,text=True).stdout.strip()
 testinput_file = os.path.join(TESTINPUT_FILES_PATH,f"{hostname}_testinput.json")
+
+unit_load_time_in_mins = 5
+num_tables_per_msg = 6
+num_records_per_table = 12
+osquery_template_file = "tables_template.json"

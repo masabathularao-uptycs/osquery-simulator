@@ -1,6 +1,6 @@
 __pycache__
 input_files/*
-*.log
+/*.log
 *.out
 hostnames
 flask_session
