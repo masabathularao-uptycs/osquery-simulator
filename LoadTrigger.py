@@ -140,6 +140,9 @@ if linenumber == 0:
             if endline <= linenumber:
                 break
           print("--------------")
+          logging.warning("endline completed.. printing final statsdump")
+          logging.warning(linenumber)
+          logging.warning(datastats_action)
       statsflag=False
     else:
         print(f"Error: Input File '{input_file_path}' does not exist.")
