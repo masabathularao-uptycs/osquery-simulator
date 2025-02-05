@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import os
-from simulator_config_vars import SIMULATOR_SERVER_PORT,STACK_JSONS_PATH,hostname,testinput_file
+from simulator_config_vars import SIMULATOR_SERVER_PORT,STACK_JSONS_PATH,hostname,testinput_file, DELAY_BETWEEN_TRIGGER 
 from test_input_params import test_input_params
 # from flask_session import Session 
 import json
@@ -106,11 +106,17 @@ def check_sim_health():
         for sim_type, command in bash_commands.items():
             command_outputs[sim_type] = execute_shell_command(command)
         try:
+            load_dur_in_sec = int(test_input_params["how_many_msgs_to_send"])*DELAY_BETWEEN_TRIGGER
+            hours = load_dur_in_sec // 3600
+            minutes = (load_dur_in_sec % 3600) // 60
+            remaining_seconds = load_dur_in_sec % 60
+
             main_params = [
-                ("live endpointsim instances", command_outputs.get("endpointsim", "endpointsim key not found in command_outputs dict")),
-                ("expected instances", expected_instances),
+                ("live instances", command_outputs.get("endpointsim", "endpointsim key not found in command_outputs dict")),
+                ("exp. instances", expected_instances),
                 ("assets to enroll", expected_assets),
-                ("endline", test_input_params.get("endline", "endline key not found in test_input_params dict")),
+                ("msgs to send", test_input_params.get("how_many_msgs_to_send", "how_many_msgs_to_send key not found in test_input_params dict")),
+                ("load duration", f"{hours:02}:{minutes:02}:{remaining_seconds:02}"),
                 ("inputfile", test_input_params.get("inputfile", "inputfile key not found in test_input_params dict")),
             ]
         except Exception as e:
