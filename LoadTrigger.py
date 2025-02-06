@@ -44,22 +44,6 @@ def analyse(message):
                 datastats[table_name] =1
             else:
                 datastats[table_name] +=1
-                
-
-            # if datastats_action.get(table_name) == None:
-            #     datastats_action[table_name]={"added":0,"removed":0,"snapshot":0}
-            # if record.get('action') == 'added':
-            #         datastats_action[table_name]['added'] +=1
-            # if record.get('action') == 'removed':
-            #         datastats_action[table_name]['removed'] +=1
-            # if record.get('action') == 'snapshot':
-            #         datastats_action[table_name]['snapshot'] +=1
-            # if record.get('name') == None:
-            #     print(("Warning ,name is missing in :",record))
-            # if datastats.get(table_name) == None:
-            #     datastats[table_name] = 1
-            # else:
-            #     datastats[table_name]+=1
 
 def actual_send(msg,port):
       x = requests.post(f"http://{LOCAL_HOST}:"+str(port), data=msg)
@@ -116,14 +100,18 @@ if os.path.exists(metadata_filepath):
 else:
     metadata_contents = None
 
-iteration_count = 1
+iteration_count = 0
 total_analyse_time = 0
 start_time = time.time()
+
+decayed_delay_trigger = DELAY_BETWEEN_TRIGGER
+
 while how_many_msgs_to_send:
 
   logging.info(f"Iterating inputfile... iteration count is {iteration_count}")
   if metadata_contents and shuffle_inputfile_if_reached_end:
     logging.info("Metadata contents found.. so regenerating inputfile.")
+    decayed_delay_trigger = DELAY_BETWEEN_TRIGGER * 0.9977777778
     regenerate_same_inputfile(metadata_contents["complete_collection_of_all_tables_occurences"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"])
   elif not shuffle_inputfile_if_reached_end:
       logging.info(f"Not regenerating inputfile because shuffle_inputfile_if_reached_end set to {shuffle_inputfile_if_reached_end}")
@@ -150,22 +138,65 @@ while how_many_msgs_to_send:
           
           _thread.start_new_thread(analyse,(current_msg,))  # Analyze the current message
           
-          _thread.start_new_thread(SendTrigger, (final_message,portlist))
+          # _thread.start_new_thread(SendTrigger, (final_message,portlist))
 
           how_many_msgs_to_send -= 1
           logging.info(f"Msg sent! {how_many_msgs_to_send} remaining, Timestamp : {unix_timestamp}")
           if how_many_msgs_to_send%51 == 0:
             logging.info(datastats_action)
-          time.sleep(DELAY_BETWEEN_TRIGGER)
+          # time.sleep(decayed_delay_trigger)
 
   iteration_count+=1
 
-logging.info(f"Reached End of load, how_many_msgs_to_send:{how_many_msgs_to_send} ")
-logging.info(datastats_action)
-logging.info(datastats)
-logging.info(f"record_count: {record_count}")
-logging.info(f"input file is iterated {iteration_count} times")
+
+logging.info("------------------------------")
 
 elapsed_time = time.time() - start_time
 total_analyse_time += elapsed_time
-logging.info(total_analyse_time)
+logging.info(f"Load completed in {total_analyse_time} seconds")
+
+logging.info("------------------------------")
+
+logging.info(f"Reached End of load, Remaining msgs to send : {how_many_msgs_to_send}")
+if how_many_msgs_to_send!=0:
+   logging.warning(f"how_many_msgs_to_send is not equal to 0 : {how_many_msgs_to_send}")
+
+logging.info("------------------------------")
+
+logging.info("Analysing datastats_action dictionary ... ")
+logging.info(datastats_action)
+
+action_wise_count_result = {
+    "added":0,
+    "removed":0,
+    "snapshot":0
+}
+total_datastats_action_count=0
+
+for table in datastats_action:
+    for key,val in datastats_action[table].items():
+        action_wise_count_result[key] += val
+        total_datastats_action_count+=val
+
+logging.info(f"action_wise_count_result : {action_wise_count_result}")
+logging.info(f"total_datastats_action_count : {total_datastats_action_count}")
+
+logging.info("------------------------------")
+
+logging.info("Analysing datastats dictionary ... ")
+logging.info(datastats)
+total_datastats_count = 0
+for t,v in datastats.items():
+    total_datastats_count+=v
+logging.info(f"total_datastats_count : {total_datastats_count}")
+
+logging.info("------------------------------")
+
+logging.info(f"record_count: {record_count}")
+
+logging.info("------------------------------")
+
+logging.info(f"input file is iterated {iteration_count} times")
+
+if record_count != total_datastats_action_count or record_count!=total_datastats_count or total_datastats_count!=total_datastats_action_count:
+   logging.warning(f"records count if different dictionaries are not martching. record_count:{record_count}, total_datastats_count:{total_datastats_count}, total_datastats_action_count:{total_datastats_action_count}")
