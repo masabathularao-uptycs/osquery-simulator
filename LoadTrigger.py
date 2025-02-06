@@ -6,8 +6,9 @@ import logging
 import _thread
 import threading
 import requests
-from simulator_config_vars import testinput_file,INPUT_FILES_PATH, DELAY_BETWEEN_TRIGGER, TIME
+from simulator_config_vars import testinput_file,INPUT_FILES_PATH, DELAY_BETWEEN_TRIGGER, TIME, INPUTFILES_METADATA_PATH, shuffle_inputfile_if_reached_end
 import os
+from GenerateInputFile import regenerate_same_inputfile
 
 global datastats_action
 global record_count
@@ -17,7 +18,12 @@ datastats_action={}
 datastats={}
 statsflag=True
 
-logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename='app.log',  # Write logs to this file
+    filemode='w'  # Overwrite the log file on each run; use 'a' to append
+)
 
 LOCAL_HOST = "127.0.0.1"
 
@@ -28,20 +34,32 @@ def analyse(message):
         for record in pydict['data']:
             record_count +=1
             table_name = record['name']
-            if datastats_action.get(table_name) == None:
+            if table_name not in datastats_action: 
                 datastats_action[table_name]={"added":0,"removed":0,"snapshot":0}
-            if record.get('action') == 'added':
-                    datastats_action[table_name]['added'] +=1
-            if record.get('action') == 'removed':
-                    datastats_action[table_name]['removed'] +=1
-            if record.get('action') == 'snapshot':
-                    datastats_action[table_name]['snapshot'] +=1
-            if record.get('name') == None:
-                print(("Warning ,name is missing in :",record))
-            if datastats.get(table_name) == None:
-                datastats[table_name] = 1
+                datastats_action[table_name][record["action"]]+=1
             else:
-                datastats[table_name]+=1
+                datastats_action[table_name][record["action"]]+=1
+
+            if table_name not in datastats:
+                datastats[table_name] =1
+            else:
+                datastats[table_name] +=1
+                
+
+            # if datastats_action.get(table_name) == None:
+            #     datastats_action[table_name]={"added":0,"removed":0,"snapshot":0}
+            # if record.get('action') == 'added':
+            #         datastats_action[table_name]['added'] +=1
+            # if record.get('action') == 'removed':
+            #         datastats_action[table_name]['removed'] +=1
+            # if record.get('action') == 'snapshot':
+            #         datastats_action[table_name]['snapshot'] +=1
+            # if record.get('name') == None:
+            #     print(("Warning ,name is missing in :",record))
+            # if datastats.get(table_name) == None:
+            #     datastats[table_name] = 1
+            # else:
+            #     datastats[table_name]+=1
 
 def actual_send(msg,port):
       x = requests.post(f"http://{LOCAL_HOST}:"+str(port), data=msg)
@@ -87,34 +105,67 @@ portlist=[]
 for eachinstance in all_instances:
    portlist.append(eachinstance['port'])
 
+
+file_name_without_suffix = os.path.splitext(os.path.basename(input_file_path))[0]
+metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
+print(metadata_filepath)
+
+if os.path.exists(metadata_filepath):
+  with open(metadata_filepath, "r") as m_f:
+    metadata_contents = json.load(m_f)
+else:
+    metadata_contents = None
+
 iteration_count = 1
+total_analyse_time = 0
+start_time = time.time()
 while how_many_msgs_to_send:
-  print(f"Iterating inputfile ... , iteration count is {iteration_count}")
+
+  logging.info(f"Iterating inputfile... iteration count is {iteration_count}")
+  if metadata_contents and shuffle_inputfile_if_reached_end:
+    logging.info("Metadata contents found.. so regenerating inputfile.")
+    regenerate_same_inputfile(metadata_contents["complete_collection_of_all_tables_occurences"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"])
+  elif not shuffle_inputfile_if_reached_end:
+      logging.info(f"Not regenerating inputfile because shuffle_inputfile_if_reached_end set to {shuffle_inputfile_if_reached_end}")
+  else:
+    logging.info(f"Not regenerating inputfile because Metadata contents not found.. so using same inputfile for next iteration.")
+
   with open(input_file_path) as fs:
       while how_many_msgs_to_send:
           current_msg = fs.readline().strip('\n')
           # Break if the end of the file is reached
           if not current_msg:
-              logging.warning("reached end of input file, breaking the loop")
+              logging.info("reached end of input file, breaking the loop")
+              logging.info(datastats_action)
+              logging.info(datastats)
+              logging.info(f"record_count: {record_count}")
               break
           
-          unix_timestamp+=DELAY_BETWEEN_TRIGGER
-          final_message= str(int(unix_timestamp)) + current_msg
+          unix_timestamp=int(time.time())
+          final_message= str(unix_timestamp) + current_msg
 
-          logging.warning(f"msgs remaining to send : {how_many_msgs_to_send}, timestamp : {unix_timestamp}, length of logger msgs : {str(len(final_message))}")
           if len(final_message) > 50065000:
-            logging.warning(f"WARNING : length of msg exceeded 50065000, so skipping this msg")
+            logging.info(f"WARNING : length of msg exceeded 50065000, so skipping this msg")
             continue
           
-          analyse(current_msg)
+          _thread.start_new_thread(analyse,(current_msg,))  # Analyze the current message
+          
           _thread.start_new_thread(SendTrigger, (final_message,portlist))
-          # print(current_msg[:10])  # Process the line if needed
+
           how_many_msgs_to_send -= 1
-          if how_many_msgs_to_send%20 == 0:
-            logging.warning(datastats_action)
+          logging.info(f"Msg sent! {how_many_msgs_to_send} remaining, Timestamp : {unix_timestamp}")
+          if how_many_msgs_to_send%51 == 0:
+            logging.info(datastats_action)
           time.sleep(DELAY_BETWEEN_TRIGGER)
 
-logging.warning(f"Reached End of load, how_many_msgs_to_send:{how_many_msgs_to_send} ")
-logging.warning(datastats_action)
-logging.warning(datastats)
-logging.warning(f"input file is iterated {iteration_count} times")
+  iteration_count+=1
+
+logging.info(f"Reached End of load, how_many_msgs_to_send:{how_many_msgs_to_send} ")
+logging.info(datastats_action)
+logging.info(datastats)
+logging.info(f"record_count: {record_count}")
+logging.info(f"input file is iterated {iteration_count} times")
+
+elapsed_time = time.time() - start_time
+total_analyse_time += elapsed_time
+logging.info(total_analyse_time)

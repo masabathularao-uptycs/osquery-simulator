@@ -9,6 +9,7 @@ ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 
 HOSTNAMES_FILES_PATH = os.path.join(ROOT_PATH,'hostnames')
 INPUT_FILES_PATH = os.path.join(ROOT_PATH,'inputfiles')
+INPUTFILES_METADATA_PATH = os.path.join(ROOT_PATH,'inputfiles_metadata')
 
 hostname = subprocess.run("hostname",shell=True,capture_output=True,text=True).stdout.strip()
 testinput_file = os.path.join(ROOT_PATH,"testinput.json")
@@ -23,4 +24,4 @@ DELAY_BETWEEN_TRIGGER = 4  #this means 1 msg is sent for every 4secodns => timet
 TIME_BETWEEN_INSTANCE_ENROLLMENT = 10
 
 TIME =  "0000-01-02-01-01"
-shuffle_inputfile_if_reached_end = False
+shuffle_inputfile_if_reached_end = True

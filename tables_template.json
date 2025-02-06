@@ -1507,7 +1507,7 @@
                 "calendarTime": "Wed Jul 15 21:12:45 2020 UTC",
                 "epoch": 0,
                 "unixTime": 1594847565,
-                "action": "2dded",
+                "action": "added",
                 "columns": {
                     "remote": "192.168.8.1",
                     "type": "A",
