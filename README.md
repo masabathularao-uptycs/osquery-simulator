@@ -14,7 +14,7 @@ NOTE : Make sure to Install all the python dependency packages if missing on you
 2. Start the simulator server.
 
     ```
-    nohup python ~/osquery-simulator/app.py &> simulator_server.out &
+    nohup python3 ~/osquery-simulator/app.py &> simulator_server.out &
     ```
 
     Start the server in multiple machines (incase of multiple simulator machines):

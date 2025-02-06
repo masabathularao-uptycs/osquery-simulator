@@ -22,6 +22,13 @@ def execute_shell_com():
     except Exception as e:
         return jsonify({"status": "error","message": f"An unexpected error occurred: {e}",}), 500  # Internal Server Error
 
+@app.route('/get_input_files', methods=['GET'])
+def get_input_files():
+    return jsonify({
+            "status": "success",
+            "message": f"Successfully fetched the inputfiles list from {hostname}",
+            "input_files": os.listdir(INPUT_FILES_PATH)
+        }), 200  # OK
 
 @app.route('/check_sim_health', methods=['GET'])
 def check_sim_health():
