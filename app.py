@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import os
-from simulator_config_vars import SIMULATOR_SERVER_PORT,hostname,testinput_file, DELAY_BETWEEN_TRIGGER ,INPUT_FILES_PATH
+from simulator_config_vars import SIMULATOR_SERVER_PORT,hostname,testinput_file, DELAY_BETWEEN_TRIGGER ,INPUT_FILES_PATH, OSQUERY_TABLES_TEMPLATE_FILE
 # from flask_session import Session 
 import json
 from helper import execute_shell_command
@@ -24,10 +24,17 @@ def execute_shell_com():
 
 @app.route('/get_input_files', methods=['GET'])
 def get_input_files():
+    with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
+        osq_template_data = json.load(tf)
+    all_tables = list(osq_template_data.keys())
+    
+    # Concatenate the two lists
+    input_files = os.listdir(INPUT_FILES_PATH) + all_tables
+
     return jsonify({
             "status": "success",
             "message": f"Successfully fetched the inputfiles list from {hostname}",
-            "input_files": os.listdir(INPUT_FILES_PATH)
+            "input_files": input_files
         }), 200  # OK
 
 @app.route('/check_sim_health', methods=['GET'])
