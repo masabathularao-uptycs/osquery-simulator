@@ -1,10 +1,8 @@
 from flask import Flask, request, jsonify
 import os
-from simulator_config_vars import SIMULATOR_SERVER_PORT,STACK_JSONS_PATH,hostname,testinput_file, DELAY_BETWEEN_TRIGGER ,INPUT_FILES_PATH
-from test_input_params import test_input_params
+from simulator_config_vars import SIMULATOR_SERVER_PORT,hostname,testinput_file, DELAY_BETWEEN_TRIGGER ,INPUT_FILES_PATH
 # from flask_session import Session 
 import json
-from CreateTestinputFiles import create_testinput_files
 from helper import execute_shell_command
 
 app = Flask(__name__)
@@ -12,56 +10,7 @@ app = Flask(__name__)
 # app.config['SESSION_TYPE'] = 'filesystem'
 # Session(app)
 
-OSQUERY_DATA_LOAD_NAMES = ["multicustomer","singlecustomer"]
-OSQUERY_CONTROLPLANE_LOAD_NAMES = ["controlplane"]
 
-@app.route('/get_osquery_simulator_names', methods=['GET'])
-def get_osquery_simulator_names():
-    # Get the 'name' parameter from the request
-    stack_json_file_name = request.args.get('stack_json_file_name')
-    loadname = request.args.get('loadname', '').lower()
-
-    if loadname not in OSQUERY_DATA_LOAD_NAMES + OSQUERY_CONTROLPLANE_LOAD_NAMES:
-        return jsonify({"status": "error","message": f"'loadname' should be in {OSQUERY_CONTROLPLANE_LOAD_NAMES} or {OSQUERY_DATA_LOAD_NAMES}."}), 400  # Bad Request
-
-    # Validate the stack_json_file_path
-    stack_json_file_path = os.path.join(STACK_JSONS_PATH, stack_json_file_name)
-    if not os.path.exists(stack_json_file_path):
-        return jsonify({"status": "error","message": f"The file '{stack_json_file_path}' does not exist."}), 404  # Not Found
-
-    try:
-        # Read and load the JSON file
-        with open(stack_json_file_path, 'r') as json_file:
-            json_data = json.load(json_file)
-
-        # Fetch simulator data based on the loadname
-        if loadname in OSQUERY_DATA_LOAD_NAMES:
-            try:
-                return_sims = json_data["osquery_data_load_params"]["sims"]
-            except KeyError as e:
-                return jsonify({"status": "error","message": f"The key 'osquery_data_load_params.sims' is missing in '{stack_json_file_path}': {e}"}), 500  # Internal Server Error
-
-        elif loadname in OSQUERY_CONTROLPLANE_LOAD_NAMES:
-            try:
-                return_sims = json_data["osquery_controlplane_load_params"]["sims"]
-            except KeyError as e:
-                return jsonify({"status": "error","message": f"The key 'osquery_controlplane_load_params.sims' is missing in '{stack_json_file_path}': {e}"}), 500  # Internal Server Error
-        else:
-            return_sims = []
-
-        # Return the fetched simulator list
-        return jsonify({
-            "status": "success",
-            "message": f"Successfully fetched the simulator list for {stack_json_file_name} - {loadname} load",
-            "result_data": return_sims,
-            "input_files": os.listdir(INPUT_FILES_PATH)
-        }), 200  # OK
-
-    except json.JSONDecodeError as e:
-        return jsonify({"status": "error","message": f"Failed to parse JSON from '{stack_json_file_path}': {e}"}), 400  # Bad Request
-
-    except Exception as e:
-        return jsonify({"status": "error","message": f"An unexpected error occurred: {e}"}), 500  # Internal Server Error
 
 @app.route('/execute_shell_com', methods=['GET'])
 def execute_shell_com():
@@ -86,28 +35,28 @@ def check_sim_health():
     command_outputs = {}
 
     try:
-        testinput_result = {}
+        domain_and_count = {}
         expected_instances = 0
         expected_assets = 0
         if os.path.exists(testinput_file):
             try:
                 with open(testinput_file, 'r') as json_file:
                     testinput_file_contents = json.load(json_file)
-                instances = testinput_file_contents["instances"]
+                instances = testinput_file_contents.pop("instances")
                 for instance in instances:
                     expected_instances+=1
                     expected_assets+=instance["clients"]
-                    if instance["domain"] in testinput_result:
-                        testinput_result[instance["domain"]] += instance["clients"]
+                    if instance["domain"] in domain_and_count:
+                        domain_and_count[instance["domain"]] += instance["clients"]
                     else:
-                        testinput_result[instance["domain"]] = instance["clients"]
+                        domain_and_count[instance["domain"]] = instance["clients"]
             except Exception as e:
                 print(f"Error while processing {testinput_file} contents")
         # Execute each bash command and collect the output
         for sim_type, command in bash_commands.items():
             command_outputs[sim_type] = execute_shell_command(command)
         try:
-            load_dur_in_sec = int(test_input_params["how_many_msgs_to_send"])*DELAY_BETWEEN_TRIGGER
+            load_dur_in_sec = int(testinput_file_contents["how_many_msgs_to_send"])*DELAY_BETWEEN_TRIGGER
             hours = load_dur_in_sec // 3600
             minutes = (load_dur_in_sec % 3600) // 60
             remaining_seconds = load_dur_in_sec % 60
@@ -116,16 +65,16 @@ def check_sim_health():
                 ("live instances", command_outputs.get("endpointsim", "endpointsim key not found in command_outputs dict")),
                 ("exp. instances", expected_instances),
                 ("assets to enroll", expected_assets),
-                ("msgs to send", test_input_params.get("how_many_msgs_to_send", "how_many_msgs_to_send key not found in test_input_params dict")),
+                ("msgs to send", testinput_file_contents.get("how_many_msgs_to_send", "how_many_msgs_to_send key not found in testinput_file_contents dict")),
                 ("load duration", f"{hours:02}:{minutes:02}:{remaining_seconds:02}"),
-                ("inputfile", test_input_params.get("inputfile", "inputfile key not found in test_input_params dict")),
+                ("inputfile", testinput_file_contents.get("inputfile", "inputfile key not found in testinput_file_contents dict")),
             ]
         except Exception as e:
             print(f"key not found error while creating main_params dictionary: {e}")
             main_params={}
         # Success response with command outputs
         try:
-            remaining_load_duration = int(test_input_params["how_many_msgs_to_send"]*DELAY_BETWEEN_TRIGGER) - int(command_outputs["load_running_since_sec"])
+            remaining_load_duration = int(testinput_file_contents["how_many_msgs_to_send"]*DELAY_BETWEEN_TRIGGER) - int(command_outputs["load_running_since_sec"])
         except:
             remaining_load_duration=0
     
@@ -134,8 +83,8 @@ def check_sim_health():
             "message": f"Successfully fetched {hostname} health information.",
             "table_data_result":{
                 "process_instances": command_outputs,
-                "domain_count":testinput_result,
-                "parameter_value":test_input_params
+                "domain_count":domain_and_count,
+                "parameter_value":testinput_file_contents
             },
             "main_params":main_params,
             "load_remaining_dur_in_sec":remaining_load_duration
@@ -148,57 +97,19 @@ def check_sim_health():
 @app.route('/update_load_params', methods=['POST'])
 def update_load_params():
     try:
-        # Get the incoming form data
-        updated_params = request.form.to_dict()
-        only_for_validation = updated_params.get("only_for_validation",False)
-        print(not only_for_validation)
-        if not updated_params:
-            return jsonify({"status": "error","message": "No formdata is provided to update."}), 400  # Bad Request
+        updated_params = request.get_json()
+        print(updated_params)
 
-        # Dynamically cast and validate the input
-        for key, value in updated_params.items():
-            if key in test_input_params:
-                try:
-                    # Determine the type of the current value in test_input_params
-                    current_type = type(test_input_params[key])
-
-                    # Cast the incoming value to the type of the existing value
-                    if current_type is int:
-                        updated_params[key] = int(value)
-                    elif current_type is float:
-                        updated_params[key] = float(value)
-                    elif current_type is bool:
-                        updated_params[key] = value.lower() in ['true', '1', 'yes']
-                    else:
-                        updated_params[key] = value  # Keep as string if not a recognized type
-                except ValueError as e:
-                    # Log and ignore type conversion errors
-                    print(f"Invalid value for key '{key}': expected {current_type.__name__}." , e)
-
-        
-        # Call the function with updated parameters
+        if "instances" not in updated_params:
+            return jsonify({"status": "error","message": f"Missing required key: 'instances' not present in received updated_params"}), 400  # Bad Request        
         try:
-            if "stack_json_file" not in test_input_params:
-                return jsonify({"status": "error","message": f"Missing required key: 'stack_json_file' not present in test_input_params"}), 400  # Bad Request
-            return_dict = create_testinput_files(updated_params,do_update=not only_for_validation)
-            
-            if not only_for_validation:
-                # Update the global dictionary
-                test_input_params.update(updated_params)
-                    
-                try:
-                    # Save the updated dictionary back to the Python file
-                    with open("test_input_params.py", 'w') as f:
-                        f.write("test_input_params = " + json.dumps(test_input_params, indent=4))
-                except (IOError, OSError) as file_error:
-                    return jsonify({"status": "error","message": f"Failed to write to file: {str(file_error)}"}), 500  # Internal Server Error
-
-                return jsonify({"status": "success","message": f"Parameters for {hostname} updated successfully. Please click on refresh button to view latest simulator parameters"}), 200  # OK
-            else:
-                return jsonify({"status": "success","message": f"Asset distribution logic calculated." , "asset_dist_data":return_dict}), 200  # OK
-
+            # Save the updated dictionary back to the Python file
+            with open(testinput_file, 'w') as f:
+                f.write(json.dumps(updated_params, indent=4))
         except Exception as e:
-            return jsonify({"status": "error","message": f"Error while calling create_testinput_files(): {str(e)}"}), 500  # Internal Server Error
+            return jsonify({"status": "error","message": f"Failed to write to file: {str(e)}"}), 500  # Internal Server Error
+
+        return jsonify({"status": "success","message": f"Parameters for {hostname} updated successfully. Please click on refresh button to view latest simulator parameters"}), 200  # OK
 
 
     except Exception as e:

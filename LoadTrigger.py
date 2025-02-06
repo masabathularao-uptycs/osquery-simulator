@@ -6,8 +6,7 @@ import logging
 import _thread
 import threading
 import requests
-from simulator_config_vars import testinput_file,INPUT_FILES_PATH, DELAY_BETWEEN_TRIGGER
-from test_input_params import test_input_params
+from simulator_config_vars import testinput_file,INPUT_FILES_PATH, DELAY_BETWEEN_TRIGGER, TIME
 import os
 
 global datastats_action
@@ -63,18 +62,18 @@ except Exception as e:
     sys.exit(1)
     
 all_instances=testinput_contents['instances']
-# duration_of_load_in_sec = test_input_params['duration_of_load_in_sec']
+# duration_of_load_in_sec = testinput_contents['duration_of_load_in_sec']
 # how_many_msgs_to_send = duration_of_load_in_sec // DELAY_BETWEEN_TRIGGER
 
-how_many_msgs_to_send = test_input_params['how_many_msgs_to_send']
+how_many_msgs_to_send = testinput_contents['how_many_msgs_to_send']
 
-input_file_path = os.path.join(INPUT_FILES_PATH, test_input_params['inputfile'])
+input_file_path = os.path.join(INPUT_FILES_PATH, testinput_contents['inputfile'])
 if not os.path.isfile(input_file_path):
   print(f"Error: Input File '{input_file_path}' does not exist.")
   raise f"Error: Input File '{input_file_path}' does not exist."     
 
 
-Time=test_input_params['time'].split('-')
+Time=TIME.split('-')
 if Time[0] == '0000':
   unix_timestamp=int(time.time())
   print(f"year provided is {Time[0]}, new unix_timestamp generated is : ", unix_timestamp)

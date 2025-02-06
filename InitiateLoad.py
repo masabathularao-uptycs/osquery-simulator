@@ -2,7 +2,6 @@ import json
 import sys
 import subprocess
 from simulator_config_vars import ROOT_PATH,HOSTNAMES_FILES_PATH,testinput_file, TIME_BETWEEN_INSTANCE_ENROLLMENT
-from test_input_params import test_input_params
 from create_hostnames import generate  
 import os
 
