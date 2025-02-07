@@ -3,9 +3,8 @@ import sys
 import subprocess
 from simulator_config_vars import ROOT_PATH,HOSTNAMES_FILES_PATH,testinput_file, TIME_BETWEEN_INSTANCE_ENROLLMENT
 from create_hostnames import generate  
-import os
+# import os
 
-os.makedirs(HOSTNAMES_FILES_PATH,exist_ok=True)
 generate(testinput_file)
 
 portlist=[]
@@ -33,7 +32,7 @@ def newport(eachinstance):
    #commands.getoutput(loadcmd)
    return loadcmd
 
-def check_instance_state():
+def check_instance_state(instance_list,num_expected_instances):
    #getting the ports from all the instances
    for eachinstance in instance_list:
       portlist.append(int(eachinstance['port']))
@@ -65,33 +64,35 @@ def check_instance_state():
       subprocess.getoutput("chmod 777 checkExecuteLoad.sh")
       subprocess.getoutput(f'{ROOT_PATH}/checkExecuteLoad.sh')
 
+def main():
+   try:
+      with open(testinput_file) as f:
+         data = f.read()
+         testinput_contents= json.loads(data)
+   except Exception as e:
+      print(f"Error occured while processing  {testinput_file}",e)
+      sys.exit(1)
 
-try:
-   with open(testinput_file) as f:
-      data = f.read()
-      testinput_contents= json.loads(data)
-except Exception as e:
-    print(f"Error occured while processing  {testinput_file}",e)
-    sys.exit(1)
+   instance_list=testinput_contents['instances']
+   num_expected_instances = len(instance_list)
 
-instance_list=testinput_contents['instances']
-num_expected_instances = len(instance_list)
+   Fd=open(f'{ROOT_PATH}/executeload.sh',"w")
+   Fd.write('#!/bin/bash' + '\n')
 
-Fd=open(f'{ROOT_PATH}/executeload.sh',"w")
-Fd.write('#!/bin/bash' + '\n')
+   for eachinstance in instance_list:
+      loadcmd=f'nohup {ROOT_PATH}/endpointsim --count=' + str(eachinstance['clients']) + ' --domain=' + eachinstance['domain'] +' --secret=' + '\'' + eachinstance['secret'] + '\'' + f' --name=\'{HOSTNAMES_FILES_PATH}/'+eachinstance['names'] + '\'' + ' --port=' +str(eachinstance['port']) + ' &> osx_log' + str(eachinstance['port']) +'.out &'
+      print(loadcmd)
+      Fd.write(loadcmd +'\n')
+      # Fd.write("sleep 10" +'\n')
+      Fd.write("sleep " + str(TIME_BETWEEN_INSTANCE_ENROLLMENT) +'\n')
+   Fd.write("sleep 20" +'\n')   
+   Fd.close()
+   subprocess.getoutput("chmod 777 executeload.sh")
+   subprocess.getoutput(f'{ROOT_PATH}/executeload.sh')
+   check_instance_state(instance_list,num_expected_instances)
 
-for eachinstance in instance_list:
-   loadcmd=f'nohup {ROOT_PATH}/endpointsim --count=' + str(eachinstance['clients']) + ' --domain=' + eachinstance['domain'] +' --secret=' + '\'' + eachinstance['secret'] + '\'' + f' --name=\'{HOSTNAMES_FILES_PATH}/'+eachinstance['names'] + '\'' + ' --port=' +str(eachinstance['port']) + ' &> osx_log' + str(eachinstance['port']) +'.out &'
-   print(loadcmd)
-   Fd.write(loadcmd +'\n')
-   # Fd.write("sleep 10" +'\n')
-   Fd.write("sleep " + str(TIME_BETWEEN_INSTANCE_ENROLLMENT) +'\n')
-Fd.write("sleep 20" +'\n')   
-Fd.close()
-subprocess.getoutput("chmod 777 executeload.sh")
-subprocess.getoutput(f'{ROOT_PATH}/executeload.sh')
-check_instance_state()
-
+if __name__ == "__main__":
+    main()
 
 
 #def kill_process_by_port(port):

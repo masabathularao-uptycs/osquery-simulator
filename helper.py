@@ -32,13 +32,39 @@ def execute_configdb_query(node,query):
     print(configdb_command)
     return execute_command_in_node(node,configdb_command)
 
-def execute_shell_command(command):
-    try:
-        result = subprocess.run(command, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+import subprocess
 
-        if result.stderr.strip() == '':
-            return result.stdout.strip()
-        else:
-            return f"Error: {result.stderr.strip()}"
-    except Exception as e:
-        return f"Error executing command '{command}': {e}"
+def execute_shell_command(command: str):
+    """
+    Executes a shell command and captures both the output and errors.
+
+    Args:
+        command (str): The shell command to execute.
+
+    Returns:
+        dict: A dictionary containing the command output, error (if any), and status.
+    """
+    try:
+        # Run the command and capture both stdout and stderr
+        result = subprocess.run(command, shell=True, text=True, capture_output=True, check=True)
+        return {
+            "status": "success",
+            "output": result.stdout.strip(),
+            "error": None
+        }
+    except subprocess.CalledProcessError as e:
+        # Handle errors when the command fails
+        return {
+            "status": "error",
+            "output": e.stdout.strip(),
+            "error": e.stderr.strip()
+        }
+
+# Example Usage
+if __name__ == "__main__":
+    command = "lasds -l"  # Replace with your shell command
+    result = execute_shell_command(command)
+    print("Status:", result["status"])
+    print("Output:", result["output"])
+    if result["error"]:
+        print("Error:", result["error"])

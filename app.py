@@ -16,8 +16,18 @@ app = Flask(__name__)
 def execute_shell_com():
     try:
         command = request.args.get('shell_command', '')
+
         result = execute_shell_command(command)
-        return jsonify({"status": "success","message": f"Successfully executed {command} command on {hostname}","result":result}), 200  # Internal Server Error
+        print("Status:", result["status"])
+        print("Output:", result["output"])
+        # if result["error"]:
+        #     print("Error:", result["error"])
+        #     return jsonify({"status": "error","message": f"{result['status']}. Failed executing '{command}' on {hostname}","result":result['output']}), 200  # Internal Server Error
+            # return jsonify({"status": result["status"],"message": f"Successfully executed {command} command on {hostname}","output":result["output"]}), 200  # Internal Server Error
+
+        # return jsonify({"status": "success","message": f"Successfully executed {command} command on {hostname}","result":result}), 200  # Internal Server Error
+
+        return jsonify({"status": result["status"],"message": f"{result['error']}. Executed {command} command on {hostname}","output":result["output"]}), 200  # Internal Server Error
 
     except Exception as e:
         return jsonify({"status": "error","message": f"An unexpected error occurred: {e}",}), 500  # Internal Server Error

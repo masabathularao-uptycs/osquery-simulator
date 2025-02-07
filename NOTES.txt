@@ -1,0 +1,8 @@
+1. time taken to send 9000 msgs from an input file:
+ 1.1 - with regeneration of input files = 80 secs -> so added a decay factor
+ 1.2 - without = 3sec
+
+
+2. time taken to send 9000 msgs of an individual table -> 17 secs
+
+
