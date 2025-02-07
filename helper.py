@@ -32,8 +32,6 @@ def execute_configdb_query(node,query):
     print(configdb_command)
     return execute_command_in_node(node,configdb_command)
 
-import subprocess
-
 def execute_shell_command(command: str):
     """
     Executes a shell command and captures both the output and errors.
@@ -62,8 +60,10 @@ def execute_shell_command(command: str):
 
 # Example Usage
 if __name__ == "__main__":
-    command = "lasds -l"  # Replace with your shell command
+    command =  str(input()) # Replace with your shell command
     result = execute_shell_command(command)
+    print("command:",command)
+    print("result:",result)
     print("Status:", result["status"])
     print("Output:", result["output"])
     if result["error"]:
