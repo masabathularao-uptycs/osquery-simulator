@@ -18,16 +18,14 @@ def execute_shell_com():
         command = request.args.get('shell_command', '')
 
         result = execute_shell_command(command)
+        print(result)
         print("Status:", result["status"])
         print("Output:", result["output"])
-        # if result["error"]:
-        #     print("Error:", result["error"])
-        #     return jsonify({"status": "error","message": f"{result['status']}. Failed executing '{command}' on {hostname}","result":result['output']}), 200  # Internal Server Error
-            # return jsonify({"status": result["status"],"message": f"Successfully executed {command} command on {hostname}","output":result["output"]}), 200  # Internal Server Error
-
-        # return jsonify({"status": "success","message": f"Successfully executed {command} command on {hostname}","result":result}), 200  # Internal Server Error
-
-        return jsonify({"status": result["status"],"message": f"Executed {command} command on {hostname}. {'Error : ' if result['error'] else result['error']}","output":result["output"]}), 200  # Internal Server Error
+        if result["error"] and len(result["error"])!=0:
+            print("Error:", result["error"])
+            return jsonify({"status": result["status"],"message": f"Error occured. Executed {command} command on {hostname}.<br> Error : {result['error']}","output":result["output"]}), 200  # Internal Server Error
+        else:
+            return jsonify({"status": result["status"],"message": f"Executed {command} command on {hostname}.<br> {result['error']}","output":result["output"]}), 200  # Internal Server Error
 
     except Exception as e:
         return jsonify({"status": "error","message": f"An unexpected error occurred: {e}",}), 500  # Internal Server Error
@@ -40,7 +38,7 @@ def get_input_files():
     
     # Concatenate the two lists
     input_files = os.listdir(INPUT_FILES_PATH) + all_tables
-
+    input_files.sort()
     return jsonify({
             "status": "success",
             "message": f"Successfully fetched the inputfiles list from {hostname}",
@@ -78,7 +76,12 @@ def check_sim_health():
                 print(f"Error while processing {testinput_file} contents")
         # Execute each bash command and collect the output
         for sim_type, command in bash_commands.items():
-            command_outputs[sim_type] = execute_shell_command(command)
+            command_result = execute_shell_command(command)
+            print(command)
+            print(command_result)
+            command_outputs[sim_type] = command_result["output"]
+            if command_result["error"] and len(command_result["error"])!=0:
+                command_outputs[sim_type] += command_result["error"]
         try:
             load_dur_in_sec = int(testinput_file_contents["how_many_msgs_to_send"])*DELAY_BETWEEN_TRIGGER
             hours = load_dur_in_sec // 3600
