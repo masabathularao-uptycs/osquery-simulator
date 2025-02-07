@@ -82,7 +82,7 @@ def regenerate_same_inputfile(complete_collection_of_all_tables_occurences,dest_
     print("regeneration complete")
 
 
-def get_expected_events(dest_file,trans):
+def get_expected_events(dest_file,trans=True):
     dns_lookup_events = {'dns_lookup_events-builder-added':0, 'dns_lookup_events_1-builder-added':0, 'dns_lookup_events_2-builder-added':0, 'dns_lookup_events_3-builder-added':0, 'dns_lookup_events_4-builder-added':0,'dns_lookup_events_5-builder-added':0,'dns_lookup_events_6-builder-added':0}
     process_events = {'process_events-builder-added':0, 'process_events_1-builder-added':0, 'process_events_2-builder-added':0, 'process_events_3-builder-added':0, 'process_events_4-builder-added':0, 'process_events_5-builder-added':0, 'process_events_6-builder-added':0, 'process_events_7-builder-added':0, 'process_events_8-builder-added':0, 'process_events_9-builder-added':0, 'process_events_10-builder-added':0}
     socket_events = {'socket_events-builder-added':0, 'socket_events_1-builder-added':0, 'socket_events_2-builder-added':0, 'socket_events_3-builder-added':0, 'socket_events_4-builder-added':0, 'socket_events_5-builder-added':0, 'socket_events_6-builder-added':0,'socket_events_7-builder-added':0}
@@ -228,7 +228,7 @@ def main():
     dest_file = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_of_msgs_to_form}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
     
     complete_collection_of_all_tables_occurences = get_complete_collection(weightage_of_each_table, all_tables,num_records_per_table) #gives list containing all table names
-    regenerate_same_inputfile(complete_collection_of_all_tables_occurences,dest_file,num_of_msgs_to_form,num_records_per_table)
+    regenerate_same_inputfile(complete_collection_of_all_tables_occurences[:],dest_file,num_of_msgs_to_form,num_records_per_table)
 
     os.makedirs(INPUTFILES_METADATA_PATH, exist_ok=True)
 
