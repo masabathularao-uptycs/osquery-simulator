@@ -168,7 +168,8 @@ else:
                 logging.info(f"record_count: {record_count}")
                 break
             
-            unix_timestamp=int(time.time())
+            # unix_timestamp=int(time.time())
+            unix_timestamp += DELAY_BETWEEN_TRIGGER
             final_message= str(unix_timestamp) + current_msg
 
             if len(final_message) > 50065000:
@@ -180,7 +181,7 @@ else:
             _thread.start_new_thread(SendTrigger, (final_message,portlist))
 
             how_many_msgs_to_send -= 1
-            logging.info(f"Msg sent! {how_many_msgs_to_send} remaining, Timestamp : {unix_timestamp}")
+            logging.info(f"Msg sent!  {how_many_msgs_to_send} remaining, Timestamp : {unix_timestamp}")
             if how_many_msgs_to_send%51 == 0:
               logging.info(datastats_action)
             time.sleep(decayed_delay_trigger)
