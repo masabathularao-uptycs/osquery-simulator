@@ -10,6 +10,7 @@ from simulator_config_vars import *
 import os
 from GenerateInputFile import regenerate_same_inputfile
 import random
+import pandas as pd
 
 global datastats_action
 global record_count
@@ -224,6 +225,9 @@ logging.info(f"total_datastats_action_count : {total_datastats_action_count}")
 logging.info("------------------------------")
 
 logging.info("Analysing datastats dictionary ... ")
+datastats_df  = pd.DataFrame(list(datastats.items()), columns=['table', 'count'])
+datastats_df = datastats_df.sort_values(by=['count','table'], ascending=False)
+logging.info("\n%s", datastats_df.to_string(index=False))
 logging.info(datastats)
 total_datastats_count = 0
 for t,v in datastats.items():

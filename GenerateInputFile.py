@@ -1,5 +1,5 @@
 import random, os
-import json
+import json, re
 from LogicForDistributingAssets import return_asset_distribution
 from simulator_config_vars import *
 # from datetime import datetime
@@ -47,7 +47,8 @@ def create_single_table_and_its_records(single_message_template, table, recs_per
 
     if "variation1" in inside_of_action: #this is probably an events table
         all_variation_keys = list(inside_of_action.keys())
-        random_variation_keys = random.choices(all_variation_keys, k=recs_per_table)
+        # random_variation_keys = random.choices(all_variation_keys, k=recs_per_table)
+        random_variation_keys = [all_variation_keys[i % len(all_variation_keys)] for i in range(recs_per_table)]
         # print(random_variation_keys)
 
         for each_variation_key in random_variation_keys:
@@ -80,6 +81,123 @@ def regenerate_same_inputfile(complete_collection_of_all_tables_occurences,dest_
             file_to_save.write("\n")
     print("regeneration complete")
 
+
+def get_expected_events(dest_file,trans):
+    dns_lookup_events = {'dns_lookup_events-builder-added':0, 'dns_lookup_events_1-builder-added':0, 'dns_lookup_events_2-builder-added':0, 'dns_lookup_events_3-builder-added':0, 'dns_lookup_events_4-builder-added':0,'dns_lookup_events_5-builder-added':0,'dns_lookup_events_6-builder-added':0}
+    process_events = {'process_events-builder-added':0, 'process_events_1-builder-added':0, 'process_events_2-builder-added':0, 'process_events_3-builder-added':0, 'process_events_4-builder-added':0, 'process_events_5-builder-added':0, 'process_events_6-builder-added':0, 'process_events_7-builder-added':0, 'process_events_8-builder-added':0, 'process_events_9-builder-added':0, 'process_events_10-builder-added':0}
+    socket_events = {'socket_events-builder-added':0, 'socket_events_1-builder-added':0, 'socket_events_2-builder-added':0, 'socket_events_3-builder-added':0, 'socket_events_4-builder-added':0, 'socket_events_5-builder-added':0, 'socket_events_6-builder-added':0,'socket_events_7-builder-added':0}
+    process_file_events = {'process_file_events-builder-added':0, 'process_file_events_3-builder-added':0, 'process_file_events_4-builder-added':0, 'process_file_events_5-builder-added':0, 'process_file_events_6-builder-added':0, 'process_file_events_7-builder-added':0, 'process_file_events_8-builder-added':0, 'process_file_events_9-builder-added':0, 'process_file_events_10-builder-added':0}
+    req_tables = ['process_events', 'process_file_events', 'socket_events', 'dns_lookup_events']
+    increment=1
+    with open(dest_file, "r") as fin:
+        for line in fin:
+            lines = json.loads(line)
+            #print(line)
+            #print(len(lines["data"]))
+            for table_details in lines["data"]:
+                #print(table_details)
+                if table_details['name'] == 'process_events':
+                    # index1 = table_details['columns']['auid']
+                    # index2 = table_details['columns']['uid']
+                    #rows = table_details['rows']
+                    # if index1 == '0' or index2 == '0':
+                    if ("auid" in table_details['columns'] and table_details['columns']['auid'] == '0') or ( 'uid' in table_details['columns'] and table_details['columns']['uid'] == '0'):
+                        process_events['process_events-builder-added'] += increment
+                    if '/bin/sh' in table_details['columns']['path']:
+                        if '/bin/mysql' in table_details['columns']['ancestor_list']:
+                            process_events['process_events_5-builder-added'] += increment
+                        if '/bin/php' in table_details['columns']['ancestor_list']:
+                            process_events['process_events_1-builder-added'] += increment
+                        if '/bin/awk' in table_details['columns']['ancestor_list']:
+                            process_events['process_events_10-builder-added'] += increment
+                    if '/proc/' in table_details['columns']['cmdline']:
+                        process_events['process_events_2-builder-added'] += increment
+                    if 'base64' in table_details['columns']['cmdline']:
+                        process_events['process_events_3-builder-added'] += increment
+                    if ('bin/osascript' in table_details['columns']['path']) or ('shell' in table_details['columns']['cmdline']):
+                        process_events['process_events_4-builder-added'] += increment
+                    if table_details['columns']['exe_name'] == 'wmic.exe':
+                        process_events['process_events_7-builder-added'] += increment
+                    # if table_details['columns']['version_info'] == "Net Command":
+                    if "version_info" in table_details['columns'] and table_details['columns']['version_info'] == "Net Command":
+                        process_events['process_events_8-builder-added'] += increment
+                    if 'rmmod' in table_details['columns']['cmdline']:
+                        process_events['process_events_9-builder-added'] += increment
+                if table_details['name'] == 'socket_events':
+                    if (table_details['columns']['action'] == 'connect') and (table_details['columns']['family'] == '2') and (table_details['columns']['type'] == '2') and (table_details['columns']['exe_name'] == 'node'):
+                        socket_events['socket_events-builder-added'] += increment
+                        socket_events['socket_events_1-builder-added'] += increment
+                        socket_events['socket_events_2-builder-added'] += increment
+                    if (table_details['columns']['action'] == 'connect') and (table_details['columns']['family'] == '2') and (table_details['columns']['type'] == '2') and (table_details['columns']['remote_address'] == '169.254.169.254') and (table_details['columns']['is_container_process'] == '1'):
+                        socket_events['socket_events_3-builder-added'] += increment
+                    if (table_details['columns']['action'] == 'connect') and (table_details['columns']['cmdline'] == '-e') and (table_details['columns']['path'] == '/usr/bin/ruby'):
+                        socket_events['socket_events_4-builder-added'] += increment
+                    if "9.5.4.3" in table_details['columns']['remote_address'] or "169.254.169.254" in table_details['columns']['remote_address']:
+                        socket_events['socket_events_5-builder-added'] += increment
+                    if "9.5.4.3" in table_details['columns']['remote_address']:
+                        socket_events['socket_events_6-builder-added'] += increment
+                    if "ruby" in table_details["columns"]["path"]:
+                        socket_events['socket_events_7-builder-added'] += increment
+
+                if table_details['name'] == 'dns_lookup_events':
+                    #print(table_details["columns"])
+                    index = table_details['columns']['question']
+                    index1=table_details['columns']['answer']
+                    last_part = index1.split('.')[-1]
+                    #print(last_part)
+                    num_list=re.findall("[0-9]", last_part)
+                    #rows = table_details['rows']
+                    #for row in rows:
+                    if 'malware' in index:
+                        dns_lookup_events['dns_lookup_events_1-builder-added'] += increment
+                        dns_lookup_events['dns_lookup_events_2-builder-added'] += increment
+                    if 'dga' in index:
+                        dns_lookup_events['dns_lookup_events_3-builder-added'] += increment
+                    if 'phishing' in index:
+                        dns_lookup_events['dns_lookup_events_4-builder-added'] += increment
+                    if 'coinminer' in index:
+                        dns_lookup_events['dns_lookup_events-builder-added'] += increment  
+                    if  len(last_part) == len(num_list):
+                        dns_lookup_events['dns_lookup_events_6-builder-added'] += increment     
+                    if len(index)>7:
+                        dns_lookup_events['dns_lookup_events_5-builder-added'] += increment
+                        
+    
+
+                if table_details['name'] == 'process_file_events':
+                    #rows = table_details['rows']
+                    #for row in rows:
+                    if (table_details['columns']['path'] == '/etc/passwd') and (table_details['columns']['operation'] == 'open') and (table_details['columns']['flags'] == 'O_WRONLY'):
+                        process_file_events['process_file_events_3-builder-added'] += increment
+                        process_file_events['process_file_events_4-builder-added'] += increment
+                    if (table_details['columns']['operation'] == 'chmod') and (table_details['columns']['flags'] == 'S_ISUID'):
+                        process_file_events['process_file_events-builder-added'] += increment
+                    if (table_details['columns']['operation'] == 'rename') and (table_details['columns']['dest_path'] == '/.'):
+                        process_file_events['process_file_events_5-builder-added'] += increment
+                    if table_details['columns']['operation'] == 'chown32':
+                        process_file_events['process_file_events_6-builder-added'] += increment
+                    if (table_details['columns']['operation'] == 'write') and (table_details['columns']['executable'] == 'System') and (('.exe' in table_details['columns']['path']) or ('4D5A9000' in table_details['columns']['magic_number'])):
+                        process_file_events['process_file_events_7-builder-added'] += increment
+                    if (table_details['columns']['operation'] == 'rename'):
+                        process_file_events['process_file_events_8-builder-added'] += increment
+                    if ('/etc/ld.so.conf' in table_details['columns']['path']) and (table_details['columns']['operation'] == 'open') and (table_details['columns']['flags'] == 'O_WRONLY'):
+                        process_file_events['process_file_events_9-builder-added'] += increment
+                    if (table_details['columns']['path'] == '/etc/passwd') and (table_details['columns']['operation'] == 'open') and (table_details['columns']['is_container_process'] == '0'):
+                        process_file_events['process_file_events_10-builder-added'] += increment
+
+            
+        dict1 = {}
+        dict1.update(dns_lookup_events)
+        dict1.update(process_events)
+        dict1.update(socket_events)
+        dict1.update(process_file_events)
+        if not trans:
+            transformations=["dns_lookup_events_5-builder-added","dns_lookup_events_6-builder-added","dns_lookup_events_7-builder-added","socket_events_7-builder-added","socket_events_8-builder-added"]
+            keys=dict1.keys()
+            for events in keys:
+                if events in transformations:
+                    dict1[events]=0        
+        return dict1
 
 def main():
     unit_loadtime_in_sec = unit_load_time_in_mins*60
@@ -127,9 +245,9 @@ def main():
         "num_records_per_table":num_records_per_table,
         "OSQUERY_TABLES_TEMPLATE_FILE":OSQUERY_TABLES_TEMPLATE_FILE,
         "number_of_unique_tables" : len(all_tables),
-        "all_tables":all_tables,
-        "updated_test_input_params":updated_test_input_params,
-        "weightage_of_each_table":weightage_of_each_table,
+        "distribution_logic_params":updated_test_input_params,
+        "count_of_records_for_each_table":{table:weightage*num_records_per_table for table,weightage in zip(all_tables,weightage_of_each_table)},
+        "expected_events_counts":get_expected_events(dest_file),
         "dest_file":os.path.basename(dest_file),
         "complete_collection_of_all_tables_occurences":complete_collection_of_all_tables_occurences,
     }

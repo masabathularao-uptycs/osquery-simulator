@@ -6,3 +6,27 @@
 2. time taken to send 9000 msgs of an individual table -> 17 secs
 
 
+
+
+PENDING TASKS:
+
+1. INPUT FILES RELATED:
+
+    1.1. Add new tables that are missing - top tables from prod (superset) list - collect sample records for each table
+    1.2. Update each record for the tables before posting it.
+    1.3. Modify template file with new table records (schema might have changed)
+
+
+2. ACCURACY RELATED
+
+    2.1 Run sample loads and test accuracies with new code changes and new inputfiles.
+    2.2 Modify accuracy scripts to support new input files.
+    2.3 Calculate accuracies for all the tables and all the customers for the report.
+
+
+3. SIMULATOR UI RELATED
+
+    3.1. Error handling in some cases
+    3.2. Integrate controlplane load
+    3.3. Attach and dettach simulators from stacks
+    3.4 collect report automatically after load completes.
