@@ -27,7 +27,7 @@ def execute_shell_com():
 
         # return jsonify({"status": "success","message": f"Successfully executed {command} command on {hostname}","result":result}), 200  # Internal Server Error
 
-        return jsonify({"status": result["status"],"message": f"{result['error']}. Executed {command} command on {hostname}","output":result["output"]}), 200  # Internal Server Error
+        return jsonify({"status": result["status"],"message": f"Executed {command} command on {hostname}. {result['error']}","output":result["output"]}), 200  # Internal Server Error
 
     except Exception as e:
         return jsonify({"status": "error","message": f"An unexpected error occurred: {e}",}), 500  # Internal Server Error
