@@ -75,6 +75,8 @@ for eachinstance in all_instances:
 
 how_many_msgs_to_send = testinput_contents['how_many_msgs_to_send']
 
+saved_how_many_msgs_to_send = how_many_msgs_to_send
+
 start_time = time.time()
 iteration_count = 0
 total_analyse_time = 0
@@ -200,7 +202,7 @@ logging.info("------------------------------")
 
 logging.info(f"Reached End of load, Remaining msgs to send : {how_many_msgs_to_send}")
 if how_many_msgs_to_send!=0:
-   logging.warning(f"how_many_msgs_to_send is not equal to 0 : {how_many_msgs_to_send}")
+   logging.fatal(f"how_many_msgs_to_send is not equal to zero : {how_many_msgs_to_send}")
 
 logging.info("------------------------------")
 
@@ -244,3 +246,12 @@ logging.info(f"input file is iterated {iteration_count} times")
 
 if record_count != total_datastats_action_count or record_count!=total_datastats_count or total_datastats_count!=total_datastats_action_count:
    logging.warning(f"records count if different dictionaries are not martching. record_count:{record_count}, total_datastats_count:{total_datastats_count}, total_datastats_action_count:{total_datastats_action_count}")
+
+if metadata_contents:
+    expected_sent_records ={table:val*iteration_count for table,val in  metadata_contents["count_of_records_for_each_table"].items()}
+    if expected_sent_records == datastats:
+        logging.info("Success : Expected number of records are sent.")
+    elif saved_how_many_msgs_to_send % metadata_contents["num_of_msgs_to_form"] != 0:
+        logging.warning("Provided 'how_many_msgs_to_send' should be multiple of no. of msgs in the inputfile if you want to calculate accuracies.")
+    else:
+        logging.critical("Number of sent records are not equal to expected number of records.")
