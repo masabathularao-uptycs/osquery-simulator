@@ -209,7 +209,8 @@ def get_expected_events(save_input_file_to,trans=True):
 
 def main():
     number_of_tables_to_create = NUMBER_OF_MSGS_PER_INPUTFILE*NUMBER_OF_TABLES_PER_MSG
-
+    first_x_percent_tables = 30
+    gets_y_percent_weightage = 60
     print(number_of_tables_to_create)
 
     with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
@@ -219,8 +220,8 @@ def main():
 
     updated_test_input_params = {
         "num_customers" : len(all_tables),     #this number is the number of unique tables you want to send the load to
-        "first_x_customer_percentage":30,       # first x % of tables have
-        "load_percentage_for_first_x_percent_customers":60,     #y % weigtage
+        "first_x_customer_percentage":first_x_percent_tables,       # first x % of tables have
+        "load_percentage_for_first_x_percent_customers":gets_y_percent_weightage,     #y % weigtage
         "total_number_of_assets":number_of_tables_to_create            # this number is the number of tables to create -> 900/6=150 msgs -> 300secs of load -> 5 mins of load
     }
 
@@ -231,7 +232,7 @@ def main():
     print(len(weightage_of_each_table))
     print(sum(weightage_of_each_table))
 
-    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{calculated_unit_load_time_in_mins}min_{NUMBER_OF_MSGS_PER_INPUTFILE}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{NUMBER_OF_TABLES_PER_MSG}tab_{NUMBER_OF_RECORDS_PER_TABLE}rec.log")
+    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{calculated_unit_load_time_in_mins}min_{NUMBER_OF_MSGS_PER_INPUTFILE}msgs_formed_using_{len(all_tables)}tables_with_ratio_{first_x_percent_tables}:{gets_y_percent_weightage}_{NUMBER_OF_TABLES_PER_MSG}tab_{NUMBER_OF_RECORDS_PER_TABLE}rec.log")
     weightage_mapping = dict(zip(all_tables, weightage_of_each_table))
     # complete_collection_of_all_tables_occurences = get_complete_collection(weightage_mapping) #gives list containing all table names
     regenerate_same_inputfile(weightage_mapping,save_input_file_to,NUMBER_OF_MSGS_PER_INPUTFILE,NUMBER_OF_RECORDS_PER_TABLE,OSQUERY_TABLES_TEMPLATE_FILE)
