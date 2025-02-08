@@ -9,7 +9,8 @@ def shuffle_and_split(lst, n):
     if n <= 0 or len(lst) < n:
         raise ValueError("The number of sublists must be positive and not exceed the list size.")
 
-    random.shuffle(lst)  # Shuffle the list in place
+    if not __name__ == "__main__":
+        random.shuffle(lst)  # Shuffle the list in place
     
     # Compute size of each bucket
     bucket_size = len(lst) // n
@@ -40,8 +41,10 @@ def create_single_table_and_its_records(single_message_template, table, recs_per
     with open(tables_template_file) as tf:
         osq_template_data = json.load(tf)
 
-    rand_action = random.choice(list(osq_template_data[table].keys()))
-    # rand_action = "added"
+    if __name__ == "__main__":
+        rand_action = "added"
+    else:
+        rand_action = random.choice(list(osq_template_data[table].keys()))
     single_message_template["action"] = rand_action
     inside_of_action = osq_template_data[table][rand_action]
 
