@@ -37,49 +37,54 @@ def get_complete_collection(weightage_of_each_table, all_tables,num_records_per_
 
 
 
-def create_single_table_and_its_records(single_message_template, table, recs_per_table):
-    with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
+def create_single_table_and_its_records(single_message_template, table, recs_per_table, tables_template_file):
+    with open(tables_template_file) as tf:
         osq_template_data = json.load(tf)
-    # print(recs_per_table)
+
     rand_action = random.choice(list(osq_template_data[table].keys()))
     single_message_template["action"] = rand_action
     inside_of_action = osq_template_data[table][rand_action]
 
-    if "variation1" in inside_of_action: #this is probably an events table
+    if "variation1" in inside_of_action:  # This is probably an events table
         all_variation_keys = list(inside_of_action.keys())
         # random_variation_keys = random.choices(all_variation_keys, k=recs_per_table)
-        random_variation_keys = [all_variation_keys[i % len(all_variation_keys)] for i in range(recs_per_table)]
-        # print(random_variation_keys)
+        # Generate sequential keys with wrapping if the list length is smaller than recs_per_table
+        sequential_variation_keys = [all_variation_keys[i % len(all_variation_keys)] for i in range(recs_per_table)]
 
-        for each_variation_key in random_variation_keys:
+        for each_variation_key in sequential_variation_keys:
             single_message_template["data"].append(inside_of_action[each_variation_key])
     else:
         for _ in range(recs_per_table):
             single_message_template["data"].append(inside_of_action)
-    return single_message_template
 
 
-
-def regenerate_same_inputfile(complete_collection_of_all_tables_occurences,dest_file,num_of_msgs_to_form,num_records_per_table):
-    print(f"generating inputfile {dest_file}")
-    file_to_save = open(dest_file, "w")
-    final_collection = shuffle_and_split(complete_collection_of_all_tables_occurences,num_of_msgs_to_form) #splits tables list into chunks, final lenght of list will be equal to num of msgs to form
-    # print(final_collection)
-
-    for list_of_tables_for_single_msg in final_collection:
-        single_message_template = {"node_key": "11111111-1111-1111-1111-111111111111:5d352099-5f27-5343-bb6a-4282e97d95eb",
+def regenerate_same_inputfile(complete_collection_of_all_tables_occurrences, dest_file, num_of_msgs_to_form, num_records_per_table, tables_template_file):
+    print(f"Generating input file: {dest_file}")
+    
+    final_collection = shuffle_and_split(complete_collection_of_all_tables_occurrences, num_of_msgs_to_form)
+    
+    with open(dest_file, "w") as file_to_save:
+        for list_of_tables_for_single_msg in final_collection:
+            single_message_template = {
+                "node_key": "11111111-1111-1111-1111-111111111111:5d352099-5f27-5343-bb6a-4282e97d95eb",
                 "log_type": "result",
                 "data": [],
                 "action": ""
-                }
-        # print("processing : " , msg)
-        for table in list_of_tables_for_single_msg:
-            # pass
-            single_message_template = create_single_table_and_its_records(single_message_template, table, num_records_per_table)
-        if single_message_template:
-            file_to_save.write(json.dumps(single_message_template))
-            file_to_save.write("\n")
-    print("regeneration complete")
+            }
+            
+            for table in list_of_tables_for_single_msg:
+                create_single_table_and_its_records(single_message_template, table, num_records_per_table, tables_template_file)
+
+            if single_message_template["data"]:  # Check if the message has valid data
+                json.dump(single_message_template, file_to_save)
+                file_to_save.write("\n")
+            else:
+                print("ERROR : Message is not populated")
+                raise(f"ERROR : Message is not populated for tables list : {list_of_tables_for_single_msg}")
+
+                
+    print("Regeneration complete.")
+
 
 
 def get_expected_events(dest_file,trans=True):
@@ -228,7 +233,7 @@ def main():
     dest_file = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_of_msgs_to_form}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
     
     complete_collection_of_all_tables_occurences = get_complete_collection(weightage_of_each_table, all_tables,num_records_per_table) #gives list containing all table names
-    regenerate_same_inputfile(complete_collection_of_all_tables_occurences[:],dest_file,num_of_msgs_to_form,num_records_per_table)
+    regenerate_same_inputfile(complete_collection_of_all_tables_occurences[:],dest_file,num_of_msgs_to_form,num_records_per_table,OSQUERY_TABLES_TEMPLATE_FILE)
 
     os.makedirs(INPUTFILES_METADATA_PATH, exist_ok=True)
 
@@ -243,7 +248,7 @@ def main():
         "number_of_tables_to_create":number_of_tables_to_create,
         "num_tables_per_msg":num_tables_per_msg,
         "num_records_per_table":num_records_per_table,
-        "OSQUERY_TABLES_TEMPLATE_FILE":OSQUERY_TABLES_TEMPLATE_FILE,
+        "tables_template_file":OSQUERY_TABLES_TEMPLATE_FILE,
         "number_of_unique_tables" : len(all_tables),
         "distribution_logic_params":updated_test_input_params,
         "count_of_records_for_each_table":{table:weightage*num_records_per_table for table,weightage in zip(all_tables,weightage_of_each_table)},

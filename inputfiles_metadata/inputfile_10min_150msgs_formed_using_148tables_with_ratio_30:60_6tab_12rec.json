@@ -6,7 +6,7 @@
     "number_of_tables_to_create": 900,
     "num_tables_per_msg": 6,
     "num_records_per_table": 12,
-    "OSQUERY_TABLES_TEMPLATE_FILE": "tables_template.json",
+    "tables_template_file": "tables_template.json",
     "number_of_unique_tables": 148,
     "distribution_logic_params": {
         "num_customers": 148,

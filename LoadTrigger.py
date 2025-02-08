@@ -62,7 +62,7 @@ try:
       data = f.read()
       testinput_contents= json.loads(data)
 except Exception as e:
-    print(f"Error occured while processing  {testinput_file}",e)
+    logging.critical(f"Error occured while processing  {testinput_file}",e)
     sys.exit(1)
     
 all_instances=testinput_contents['instances']
@@ -79,6 +79,7 @@ saved_how_many_msgs_to_send = how_many_msgs_to_send
 
 start_time = time.time()
 iteration_count = 0
+regeneration_count = 0
 total_analyse_time = 0
 
 decayed_delay_trigger = DELAY_BETWEEN_TRIGGER
@@ -86,41 +87,45 @@ decayed_delay_trigger = DELAY_BETWEEN_TRIGGER
 input_file_path = os.path.join(INPUT_FILES_PATH, testinput_contents['inputfile'])
 
 if not os.path.isfile(input_file_path):
-  print(f"Error: Input File '{input_file_path}' does not exist.")
-  with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
-    osq_template_data = json.load(tf)
-  if testinput_contents['inputfile'] in osq_template_data:
-    table_name = testinput_contents['inputfile']
-    logging.info(f"Valid Table name found {table_name}. Creating msg using this table.")
+    logging.warning(f"Input File '{input_file_path}' does not exist.")
+    with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
+        osq_template_data = json.load(tf)
+    if testinput_contents['inputfile'] in osq_template_data:
+        table_name = testinput_contents['inputfile']
+        logging.info(f"Valid Table name found {table_name}. Creating msg using this table.")
 
-    while how_many_msgs_to_send:
-      single_message_template = {"node_key": "11111111-1111-1111-1111-111111111111:5d352099-5f27-5343-bb6a-4282e97d95eb",
-                    "log_type": "result",
-                    "data": [],
-                    "action": ""
-                    }
-      rand_action = random.choice(list(osq_template_data[table_name].keys()))
-      single_message_template["action"] = rand_action
-      inside_of_action = osq_template_data[table_name][rand_action]
+        while how_many_msgs_to_send:
+            single_message_template = {"node_key": "11111111-1111-1111-1111-111111111111:5d352099-5f27-5343-bb6a-4282e97d95eb",
+                            "log_type": "result",
+                            "data": [],
+                            "action": ""
+                            }
+            rand_action = random.choice(list(osq_template_data[table_name].keys()))
+            single_message_template["action"] = rand_action
+            inside_of_action = osq_template_data[table_name][rand_action]
 
-      if "variation1" in inside_of_action: #this is probably an events table
-          all_variation_keys = list(inside_of_action.keys())
-          random_variation_keys = random.choices(all_variation_keys, k=num_records_per_table*num_tables_per_msg)
-          logging.info(f"Random variation keys are : {random_variation_keys}")
+            if "variation1" in inside_of_action: #this is probably an events table
+                all_variation_keys = list(inside_of_action.keys())
+                random_variation_keys = random.choices(all_variation_keys, k=num_records_per_table*num_tables_per_msg)
+                logging.info(f"Random variation keys are : {random_variation_keys}")
 
-          for each_variation_key in random_variation_keys:
-              single_message_template["data"].append(inside_of_action[each_variation_key])
-      else:
-          for _ in range(num_records_per_table*num_tables_per_msg):
-              single_message_template["data"].append(inside_of_action)
-      unix_timestamp=int(time.time())
-      final_message= str(unix_timestamp) + str(single_message_template)
-      # print(single_message_template)
-      analyse(json.dumps(single_message_template))  # Analyze the current message      
-      _thread.start_new_thread(SendTrigger, (final_message,portlist))
-      how_many_msgs_to_send-=1
-      logging.info(f"Msg sent(built using {table_name} table)! {how_many_msgs_to_send} remaining, Timestamp : {unix_timestamp}")
-      time.sleep(decayed_delay_trigger)
+                for each_variation_key in random_variation_keys:
+                    single_message_template["data"].append(inside_of_action[each_variation_key])
+            else:
+                for _ in range(num_records_per_table*num_tables_per_msg):
+                    single_message_template["data"].append(inside_of_action)
+            unix_timestamp=int(time.time())
+            final_message= str(unix_timestamp) + str(single_message_template)
+            # print(single_message_template)
+            analyse(json.dumps(single_message_template))  # Analyze the current message      
+            _thread.start_new_thread(SendTrigger, (final_message,portlist))
+            how_many_msgs_to_send-=1
+            logging.info(f"Msg sent(built using {table_name} table)! {how_many_msgs_to_send} remaining, Timestamp : {unix_timestamp}")
+            time.sleep(decayed_delay_trigger)
+    else:
+        logging.error(f"'{testinput_contents['inputfile']}' table not found in {OSQUERY_TABLES_TEMPLATE_FILE} either")
+        sys.exit(1)
+
 
     
 
@@ -138,7 +143,7 @@ else:
 
   file_name_without_suffix = os.path.splitext(os.path.basename(input_file_path))[0]
   metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
-  print(metadata_filepath)
+  print(f"metadata_filepath : {metadata_filepath}")
 
   if os.path.exists(metadata_filepath):
     with open(metadata_filepath, "r") as m_f:
@@ -149,12 +154,12 @@ else:
 
 
   while how_many_msgs_to_send:
-
-    logging.info(f"Iterating inputfile... iteration count is {iteration_count}")
     if metadata_contents and shuffle_inputfile_if_reached_end:
-      logging.info("Metadata contents found.. so regenerating inputfile.")
-      decayed_delay_trigger = DELAY_BETWEEN_TRIGGER * 0.9977777778
-      regenerate_same_inputfile(metadata_contents["complete_collection_of_all_tables_occurences"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"])
+        decayed_delay_trigger = DELAY_BETWEEN_TRIGGER * 0.9977777778
+        regenerate_same_inputfile(metadata_contents["complete_collection_of_all_tables_occurences"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"],metadata_contents["tables_template_file"])
+        regeneration_count+=1
+        logging.info(f"Metadata contents found.. so inputfile is regenerated. regeneration_count : {regeneration_count}")
+
     elif not shuffle_inputfile_if_reached_end:
         logging.info(f"Not regenerating inputfile because shuffle_inputfile_if_reached_end set to {shuffle_inputfile_if_reached_end}")
     else:
@@ -190,6 +195,7 @@ else:
             time.sleep(decayed_delay_trigger)
 
     iteration_count+=1
+    logging.info(f"Iteration complete! iteration count is {iteration_count}")
 
 
 logging.info("------------------------------")
@@ -202,7 +208,7 @@ logging.info("------------------------------")
 
 logging.info(f"Reached End of load, Remaining msgs to send : {how_many_msgs_to_send}")
 if how_many_msgs_to_send!=0:
-   logging.fatal(f"how_many_msgs_to_send is not equal to zero : {how_many_msgs_to_send}")
+   logging.critical(f"how_many_msgs_to_send is not equal to zero : {how_many_msgs_to_send}")
 
 logging.info("------------------------------")
 
@@ -243,6 +249,7 @@ logging.info(f"record_count: {record_count}")
 logging.info("------------------------------")
 
 logging.info(f"input file is iterated {iteration_count} times")
+logging.info(f"input file is Regenerated {regeneration_count} times")
 
 if record_count != total_datastats_action_count or record_count!=total_datastats_count or total_datastats_count!=total_datastats_action_count:
    logging.warning(f"records count if different dictionaries are not martching. record_count:{record_count}, total_datastats_count:{total_datastats_count}, total_datastats_action_count:{total_datastats_action_count}")
