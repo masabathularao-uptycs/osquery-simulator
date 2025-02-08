@@ -12,20 +12,20 @@
 
 2. Intall Python3 on all the simulator machines
 
-verify version by running:  
-```
-for i in machine1 machine2 machine3 ; do ssh abacus@$i "python3 -V";done
-```
+    verify version by running:  
+    ```
+    for i in machine1 machine2 machine3 ; do ssh abacus@$i "python3 -V";done
+    ```
 
 <br>
 
 3. Install the following python3 dependencies on all the machines.
-```
-for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install flask";done
-for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install requests";done
-for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install pandas";done
-for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install scipy";done
-```
+    ```
+    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install flask";done
+    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install requests";done
+    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install pandas";done
+    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install scipy";done
+    ```
 
 <br>
 

@@ -155,7 +155,7 @@ else:
   while how_many_msgs_to_send:
     if metadata_contents and shuffle_inputfile_if_reached_end:
         decayed_delay_trigger = DELAY_BETWEEN_TRIGGER * 0.9977777778
-        regenerate_same_inputfile(metadata_contents["weightage_mapping"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"],metadata_contents["tables_template_file"])
+        regenerate_same_inputfile(metadata_contents["weightage_mapping"], input_file_path, metadata_contents["number_of_msgs_this_inputfile_contains"], metadata_contents["number_of_records_per_table"],metadata_contents["tables_template_file"])
         regeneration_count+=1
         logging.info(f"Metadata contents found.. so inputfile is regenerated. regeneration_count : {regeneration_count}")
 
@@ -254,10 +254,10 @@ if record_count != total_datastats_action_count or record_count!=total_datastats
    logging.warning(f"records count if different dictionaries are not martching. record_count:{record_count}, total_datastats_count:{total_datastats_count}, total_datastats_action_count:{total_datastats_action_count}")
 
 if metadata_contents:
-    expected_sent_records ={table:val*iteration_count for table,val in  metadata_contents["count_of_records_for_each_table"].items()}
+    expected_sent_records ={table:val*iteration_count for table,val in  metadata_contents["expected_records_for_each_table"].items()}
     if expected_sent_records == datastats:
         logging.info("Success : Expected number of records are sent.")
-    elif saved_how_many_msgs_to_send % metadata_contents["num_of_msgs_to_form"] != 0:
+    elif saved_how_many_msgs_to_send % metadata_contents["number_of_msgs_this_inputfile_contains"] != 0:
         logging.warning("Provided 'how_many_msgs_to_send' should be multiple of no. of msgs in the inputfile if you want to calculate accuracies.")
     else:
         logging.critical("Number of sent records are not equal to expected number of records.")

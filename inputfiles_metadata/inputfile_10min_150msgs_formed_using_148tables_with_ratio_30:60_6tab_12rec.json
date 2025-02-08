@@ -1,13 +1,9 @@
 {
-    "unit_load_time_in_mins": 10,
-    "unit_loadtime_in_sec": 600,
-    "DELAY_BETWEEN_TRIGGER": 4,
-    "num_of_msgs_to_form": 150,
-    "number_of_tables_to_create": 900,
-    "num_tables_per_msg": 6,
-    "num_records_per_table": 12,
+    "number_of_msgs_this_inputfile_contains": 150,
+    "number_of_tables_per_msg": 6,
+    "total_number_of_tables_including_duplicates": 900,
     "tables_template_file": "tables_template.json",
-    "number_of_unique_tables": 148,
+    "total_number_of_unique_tables": 148,
     "distribution_logic_params": {
         "num_customers": 148,
         "first_x_customer_percentage": 30,
@@ -164,7 +160,8 @@
         "oem_strings": 1,
         "syscall_events": 1
     },
-    "count_of_records_for_each_table": {
+    "number_of_records_per_table": 12,
+    "expected_records_for_each_table": {
         "process_events": 204,
         "socket_events": 216,
         "process_file_events": 204,
