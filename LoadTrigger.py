@@ -106,13 +106,13 @@ if not os.path.isfile(input_file_path):
 
             if "variation1" in inside_of_action: #this is probably an events table
                 all_variation_keys = list(inside_of_action.keys())
-                random_variation_keys = random.choices(all_variation_keys, k=num_records_per_table*num_tables_per_msg)
+                random_variation_keys = random.choices(all_variation_keys, k=NUMBER_OF_RECORDS_PER_TABLE*NUMBER_OF_TABLES_PER_MSG)
                 # logging.info(f"Random variation keys are : {random_variation_keys}")
 
                 for each_variation_key in random_variation_keys:
                     single_message_template["data"].append(inside_of_action[each_variation_key])
             else:
-                for _ in range(num_records_per_table*num_tables_per_msg):
+                for _ in range(NUMBER_OF_RECORDS_PER_TABLE*NUMBER_OF_TABLES_PER_MSG):
                     single_message_template["data"].append(inside_of_action)
             unix_timestamp=int(time.time())
             final_message = f"{unix_timestamp}{json.dumps(single_message_template)}"

@@ -205,7 +205,7 @@ def get_expected_events(save_input_file_to,trans=True):
         return dict1
 
 def main():
-    number_of_tables_to_create = NUMBER_OF_MSGS_PER_INPUTFILE*num_tables_per_msg
+    number_of_tables_to_create = NUMBER_OF_MSGS_PER_INPUTFILE*NUMBER_OF_TABLES_PER_MSG
 
     print(number_of_tables_to_create)
 
@@ -228,10 +228,10 @@ def main():
     print(len(weightage_of_each_table))
     print(sum(weightage_of_each_table))
 
-    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{calculated_unit_load_time_in_mins}min_{NUMBER_OF_MSGS_PER_INPUTFILE}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
+    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{calculated_unit_load_time_in_mins}min_{NUMBER_OF_MSGS_PER_INPUTFILE}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{NUMBER_OF_TABLES_PER_MSG}tab_{NUMBER_OF_RECORDS_PER_TABLE}rec.log")
     weightage_mapping = dict(zip(all_tables, weightage_of_each_table))
     # complete_collection_of_all_tables_occurences = get_complete_collection(weightage_mapping) #gives list containing all table names
-    regenerate_same_inputfile(weightage_mapping,save_input_file_to,NUMBER_OF_MSGS_PER_INPUTFILE,num_records_per_table,OSQUERY_TABLES_TEMPLATE_FILE)
+    regenerate_same_inputfile(weightage_mapping,save_input_file_to,NUMBER_OF_MSGS_PER_INPUTFILE,NUMBER_OF_RECORDS_PER_TABLE,OSQUERY_TABLES_TEMPLATE_FILE)
 
     os.makedirs(INPUTFILES_METADATA_PATH, exist_ok=True)
 
@@ -239,15 +239,16 @@ def main():
     metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
 
     metadata_dict = {
+        "calculated_unit_load_time_in_mins":calculated_unit_load_time_in_mins,
         "number_of_msgs_this_inputfile_contains":NUMBER_OF_MSGS_PER_INPUTFILE,
-        "number_of_tables_per_msg":num_tables_per_msg,
+        "number_of_tables_per_msg":NUMBER_OF_TABLES_PER_MSG,
         "total_number_of_tables_including_duplicates":number_of_tables_to_create,
         "tables_template_file":OSQUERY_TABLES_TEMPLATE_FILE,
         "total_number_of_unique_tables" : len(all_tables),
         "distribution_logic_params":updated_test_input_params,
         "weightage_mapping" : weightage_mapping,
-        "number_of_records_per_table":num_records_per_table,
-        "expected_records_for_each_table":{table:weightage*num_records_per_table for table,weightage in zip(all_tables,weightage_of_each_table)},
+        "number_of_records_per_table":NUMBER_OF_RECORDS_PER_TABLE,
+        "expected_records_for_each_table":{table:weightage*NUMBER_OF_RECORDS_PER_TABLE for table,weightage in zip(all_tables,weightage_of_each_table)},
         "expected_events_counts":get_expected_events(save_input_file_to),
         "save_input_file_to":os.path.basename(save_input_file_to),
         # "complete_collection_of_all_tables_occurences":complete_collection_of_all_tables_occurences,

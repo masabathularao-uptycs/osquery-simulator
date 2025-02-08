@@ -20,8 +20,8 @@ DELAY_BETWEEN_TRIGGER = 4  #this means 1 msg is sent for every 4secodns => timet
 # therefore , an input file (with 150 msgs, and sending each msg every 4 seconds), has unit load time of 10 mins.
 calculated_unit_load_time_in_mins = NUMBER_OF_MSGS_PER_INPUTFILE*DELAY_BETWEEN_TRIGGER//60
 
-num_tables_per_msg = 6
-num_records_per_table = 12
+NUMBER_OF_TABLES_PER_MSG = 6
+NUMBER_OF_RECORDS_PER_TABLE = 12
 
 
 OSQUERY_TABLES_TEMPLATE_FILE = "tables_template.json"
