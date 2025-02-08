@@ -32,7 +32,7 @@ LOCAL_HOST = "127.0.0.1"
 def analyse(message):
         global record_count
         pydict=json.loads(message)
-        #print("No of records : ",len(pydict['data']))
+        #logging.info("No of records : ",len(pydict['data']))
         for record in pydict['data']:
             record_count +=1
             table_name = record['name']
@@ -49,9 +49,9 @@ def analyse(message):
 
 def actual_send(msg,port):
       x = requests.post(f"http://{LOCAL_HOST}:"+str(port), data=msg)
-      #print(dir(x))
-      #print(x.status_code)
-      #print(x.url)
+      #logging.info(dir(x))
+      #logging.info(x.status_code)
+      #logging.info(x.url)
 
 def SendTrigger(msg,portlist):
     for Port in portlist:
@@ -116,7 +116,7 @@ if not os.path.isfile(input_file_path):
                     single_message_template["data"].append(inside_of_action)
             unix_timestamp=int(time.time())
             final_message= str(unix_timestamp) + str(single_message_template)
-            # print(single_message_template)
+            # logging.info(single_message_template)
             analyse(json.dumps(single_message_template))  # Analyze the current message      
             _thread.start_new_thread(SendTrigger, (final_message,portlist))
             how_many_msgs_to_send-=1
@@ -133,17 +133,17 @@ else:
   Time=TIME.split('-')
   if Time[0] == '0000':
     unix_timestamp=int(time.time())
-    print(f"year provided is {Time[0]}, new unix_timestamp generated is : ", unix_timestamp)
+    logging.info(f"year provided is {Time[0]}, new unix_timestamp generated is : {unix_timestamp}")
   else:
     year,month,day,hr,minute=int(Time[0]),int(Time[1]),int(Time[2]),int(Time[3]),int(Time[4])
     datetime_object = datetime.datetime(year,month,day,hr,minute)
     unix_timestamp = int(time.mktime(datetime_object.timetuple()))
-    print(f"year provided is {Time[0]}, so using provided unix_timestamp : ", unix_timestamp)
+    logging.info(f"year provided is {Time[0]}, so using provided unix_timestamp : {unix_timestamp}")
 
 
   file_name_without_suffix = os.path.splitext(os.path.basename(input_file_path))[0]
   metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
-  print(f"metadata_filepath : {metadata_filepath}")
+  logging.info(f"metadata_filepath : {metadata_filepath}")
 
   if os.path.exists(metadata_filepath):
     with open(metadata_filepath, "r") as m_f:

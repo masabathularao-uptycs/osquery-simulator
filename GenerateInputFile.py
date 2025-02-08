@@ -76,7 +76,8 @@ def regenerate_same_inputfile(complete_collection_of_all_tables_occurrences, des
                 create_single_table_and_its_records(single_message_template, table, num_records_per_table, tables_template_file)
 
             if single_message_template["data"]:  # Check if the message has valid data
-                json.dump(single_message_template, file_to_save)
+                # json.dump(single_message_template, file_to_save)
+                file_to_save.write(json.dumps(single_message_template)) # this method is faster than above
                 file_to_save.write("\n")
             else:
                 print("ERROR : Message is not populated")
@@ -84,8 +85,6 @@ def regenerate_same_inputfile(complete_collection_of_all_tables_occurrences, des
 
                 
     print("Regeneration complete.")
-
-
 
 def get_expected_events(dest_file,trans=True):
     dns_lookup_events = {'dns_lookup_events-builder-added':0, 'dns_lookup_events_1-builder-added':0, 'dns_lookup_events_2-builder-added':0, 'dns_lookup_events_3-builder-added':0, 'dns_lookup_events_4-builder-added':0,'dns_lookup_events_5-builder-added':0,'dns_lookup_events_6-builder-added':0}
