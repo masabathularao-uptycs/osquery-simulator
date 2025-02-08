@@ -115,7 +115,7 @@ if not os.path.isfile(input_file_path):
                 for _ in range(num_records_per_table*num_tables_per_msg):
                     single_message_template["data"].append(inside_of_action)
             unix_timestamp=int(time.time())
-            final_message= str(unix_timestamp) + str(single_message_template)
+            final_message = f"{unix_timestamp}{json.dumps(single_message_template)}"
             # logging.info(single_message_template)
             analyse(json.dumps(single_message_template))  # Analyze the current message      
             _thread.start_new_thread(SendTrigger, (final_message,portlist))
