@@ -1,4 +1,4 @@
-import random, os
+# import random, os
 import json
 from simulator_config_vars import OSQUERY_TABLES_TEMPLATE_FILE
 

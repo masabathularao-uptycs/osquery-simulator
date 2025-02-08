@@ -4,7 +4,7 @@ import datetime
 import json
 import logging
 import _thread
-import threading
+# import threading
 import requests
 from simulator_config_vars import *
 import os

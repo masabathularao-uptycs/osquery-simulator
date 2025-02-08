@@ -4,7 +4,7 @@ input_files/*
 *.out
 hostnames
 flask_session
-simulator_venv
+new_simulator_env
 test.py
 testinput_json_files/*
 original_go_simulator
