@@ -9,15 +9,28 @@
     ```
 
 <br>
-NOTE : Make sure to Install all the python dependency packages if missing on your machines. (pip3 install -r requirements.txt)
 
-2. Start the simulator server.
+2. Intall Python3 on all the simulator machines
 
-    ```
-    nohup python3 ~/osquery-simulator/app.py &> simulator_server.out &
-    ```
+verify version by running:  
+```
+for i in machine1 machine2 machine3 ; do ssh abacus@$i "python3 -V";done
+```
 
-    Start the server in multiple machines (incase of multiple simulator machines):
+<br>
+
+3. Install the following python3 dependencies on all the machines.
+```
+for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install flask";done
+for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install requests";done
+for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install pandas";done
+for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install scipy";done
+```
+
+<br>
+
+4. Start the simulator server on all machines.
+
     ```
     for i in machine1 machine2 machine3; do
         ssh abacus@$i "cd ~/osquery-simulator && nohup python3 app.py > simulator_server.out 2>&1 & disown && echo 'Started server on $i'"
@@ -25,10 +38,8 @@ NOTE : Make sure to Install all the python dependency packages if missing on you
     ```
 <br>
 
-# Pull latest code from github to simulator machines
 
+<!-- # Pull latest code from github to simulator machines
 ```
 for i in machine1 machine2 machine3 ; do ssh abacus@$i "cd ~/osquery-simulator && git pull origin main && echo \"Git pull on $i successful\"";done
-```
-
----
+``` -->
