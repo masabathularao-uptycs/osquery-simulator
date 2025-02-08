@@ -205,9 +205,7 @@ def get_expected_events(save_input_file_to,trans=True):
         return dict1
 
 def main():
-    unit_loadtime_in_sec = unit_load_time_in_mins*60
-    num_of_msgs_to_form = unit_loadtime_in_sec//DELAY_BETWEEN_TRIGGER
-    number_of_tables_to_create = num_of_msgs_to_form*num_tables_per_msg
+    number_of_tables_to_create = NUMBER_OF_MSGS_PER_INPUTFILE*num_tables_per_msg
 
     print(number_of_tables_to_create)
 
@@ -230,10 +228,10 @@ def main():
     print(len(weightage_of_each_table))
     print(sum(weightage_of_each_table))
 
-    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_of_msgs_to_form}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
+    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{calculated_unit_load_time_in_mins}min_{NUMBER_OF_MSGS_PER_INPUTFILE}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
     weightage_mapping = dict(zip(all_tables, weightage_of_each_table))
     # complete_collection_of_all_tables_occurences = get_complete_collection(weightage_mapping) #gives list containing all table names
-    regenerate_same_inputfile(weightage_mapping,save_input_file_to,num_of_msgs_to_form,num_records_per_table,OSQUERY_TABLES_TEMPLATE_FILE)
+    regenerate_same_inputfile(weightage_mapping,save_input_file_to,NUMBER_OF_MSGS_PER_INPUTFILE,num_records_per_table,OSQUERY_TABLES_TEMPLATE_FILE)
 
     os.makedirs(INPUTFILES_METADATA_PATH, exist_ok=True)
 
@@ -241,7 +239,7 @@ def main():
     metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
 
     metadata_dict = {
-        "number_of_msgs_this_inputfile_contains":num_of_msgs_to_form,
+        "number_of_msgs_this_inputfile_contains":NUMBER_OF_MSGS_PER_INPUTFILE,
         "number_of_tables_per_msg":num_tables_per_msg,
         "total_number_of_tables_including_duplicates":number_of_tables_to_create,
         "tables_template_file":OSQUERY_TABLES_TEMPLATE_FILE,
