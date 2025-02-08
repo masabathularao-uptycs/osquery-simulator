@@ -41,6 +41,7 @@ def create_single_table_and_its_records(single_message_template, table, recs_per
         osq_template_data = json.load(tf)
 
     rand_action = random.choice(list(osq_template_data[table].keys()))
+    # rand_action = "added"
     single_message_template["action"] = rand_action
     inside_of_action = osq_template_data[table][rand_action]
 
