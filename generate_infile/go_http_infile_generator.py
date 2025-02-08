@@ -76,11 +76,11 @@ osquery_template_file = "new_file_ancestor_bkp3.json"
 with open(osquery_template_file) as tf:
     osq_template_data = json.load(tf)
 
-dest_file = "rhel_6tab_12rec_fix.log"
+save_input_file_to = "rhel_6tab_12rec_fix.log"
 lines = int(sys.argv[1])
 tables_per_msg = int(sys.argv[2])
 recs_per_table = int(sys.argv[3])
-out_fd = open(dest_file, "w")
+out_fd = open(save_input_file_to, "w")
 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 for line in range(lines):
     js_line = {"node_key": "11111111-1111-1111-1111-111111111111:5d352099-5f27-5343-bb6a-4282e97d95eb",

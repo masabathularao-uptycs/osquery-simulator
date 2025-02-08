@@ -26,10 +26,9 @@ def shuffle_and_split(lst, n):
     return result
 
 
-def get_complete_collection(weightage_of_each_table, all_tables,num_records_per_table):
+def get_complete_collection(weightage_mapping):
     complete_collection = []
-    for table,weightage in zip(all_tables,weightage_of_each_table):
-        print(table,weightage*num_records_per_table)
+    for table,weightage in weightage_mapping.items():
         while weightage:
             complete_collection.append(table)
             weightage-=1
@@ -58,15 +57,16 @@ def create_single_table_and_its_records(single_message_template, table, recs_per
             single_message_template["data"].append(inside_of_action)
 
 
-def regenerate_same_inputfile(complete_collection_of_all_tables_occurrences, dest_file, num_of_msgs_to_form, num_records_per_table, tables_template_file):
-    print(f"Generating input file: {dest_file}")
+def regenerate_same_inputfile(weightage_mapping, save_input_file_to, num_of_msgs_to_form, num_records_per_table, tables_template_file):
+    print(f"Generating input file: {save_input_file_to}")
     
-    final_collection = shuffle_and_split(complete_collection_of_all_tables_occurrences, num_of_msgs_to_form)
+    complete_collection_of_all_tables_occurences = get_complete_collection(weightage_mapping) #gives list containing all table names
+    final_collection = shuffle_and_split(complete_collection_of_all_tables_occurences, num_of_msgs_to_form)
     
-    with open(dest_file, "w") as file_to_save:
+    with open(save_input_file_to, "w") as file_to_save:
         for list_of_tables_for_single_msg in final_collection:
             single_message_template = {
-                "node_key": "11111111-1111-1111-1111-111111111111:5d352099-5f27-5343-bb6a-4282e97d95eb",
+                "node_key": "",
                 "log_type": "result",
                 "data": [],
                 "action": ""
@@ -86,14 +86,14 @@ def regenerate_same_inputfile(complete_collection_of_all_tables_occurrences, des
                 
     print("Regeneration complete.")
 
-def get_expected_events(dest_file,trans=True):
+def get_expected_events(save_input_file_to,trans=True):
     dns_lookup_events = {'dns_lookup_events-builder-added':0, 'dns_lookup_events_1-builder-added':0, 'dns_lookup_events_2-builder-added':0, 'dns_lookup_events_3-builder-added':0, 'dns_lookup_events_4-builder-added':0,'dns_lookup_events_5-builder-added':0,'dns_lookup_events_6-builder-added':0}
     process_events = {'process_events-builder-added':0, 'process_events_1-builder-added':0, 'process_events_2-builder-added':0, 'process_events_3-builder-added':0, 'process_events_4-builder-added':0, 'process_events_5-builder-added':0, 'process_events_6-builder-added':0, 'process_events_7-builder-added':0, 'process_events_8-builder-added':0, 'process_events_9-builder-added':0, 'process_events_10-builder-added':0}
     socket_events = {'socket_events-builder-added':0, 'socket_events_1-builder-added':0, 'socket_events_2-builder-added':0, 'socket_events_3-builder-added':0, 'socket_events_4-builder-added':0, 'socket_events_5-builder-added':0, 'socket_events_6-builder-added':0,'socket_events_7-builder-added':0}
     process_file_events = {'process_file_events-builder-added':0, 'process_file_events_3-builder-added':0, 'process_file_events_4-builder-added':0, 'process_file_events_5-builder-added':0, 'process_file_events_6-builder-added':0, 'process_file_events_7-builder-added':0, 'process_file_events_8-builder-added':0, 'process_file_events_9-builder-added':0, 'process_file_events_10-builder-added':0}
     req_tables = ['process_events', 'process_file_events', 'socket_events', 'dns_lookup_events']
     increment=1
-    with open(dest_file, "r") as fin:
+    with open(save_input_file_to, "r") as fin:
         for line in fin:
             lines = json.loads(line)
             #print(line)
@@ -229,14 +229,14 @@ def main():
     print(len(weightage_of_each_table))
     print(sum(weightage_of_each_table))
 
-    dest_file = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_of_msgs_to_form}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
-    
-    complete_collection_of_all_tables_occurences = get_complete_collection(weightage_of_each_table, all_tables,num_records_per_table) #gives list containing all table names
-    regenerate_same_inputfile(complete_collection_of_all_tables_occurences[:],dest_file,num_of_msgs_to_form,num_records_per_table,OSQUERY_TABLES_TEMPLATE_FILE)
+    save_input_file_to = os.path.join(INPUT_FILES_PATH,f"inputfile_{unit_load_time_in_mins}min_{num_of_msgs_to_form}msgs_formed_using_{len(all_tables)}tables_with_ratio_30:60_{num_tables_per_msg}tab_{num_records_per_table}rec.log")
+    weightage_mapping = dict(zip(all_tables, weightage_of_each_table))
+    # complete_collection_of_all_tables_occurences = get_complete_collection(weightage_mapping) #gives list containing all table names
+    regenerate_same_inputfile(weightage_mapping,save_input_file_to,num_of_msgs_to_form,num_records_per_table,OSQUERY_TABLES_TEMPLATE_FILE)
 
     os.makedirs(INPUTFILES_METADATA_PATH, exist_ok=True)
 
-    file_name_without_suffix = os.path.splitext(os.path.basename(dest_file))[0]
+    file_name_without_suffix = os.path.splitext(os.path.basename(save_input_file_to))[0]
     metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
 
     metadata_dict = {
@@ -250,10 +250,11 @@ def main():
         "tables_template_file":OSQUERY_TABLES_TEMPLATE_FILE,
         "number_of_unique_tables" : len(all_tables),
         "distribution_logic_params":updated_test_input_params,
+        "weightage_mapping" : weightage_mapping,
         "count_of_records_for_each_table":{table:weightage*num_records_per_table for table,weightage in zip(all_tables,weightage_of_each_table)},
-        "expected_events_counts":get_expected_events(dest_file),
-        "dest_file":os.path.basename(dest_file),
-        "complete_collection_of_all_tables_occurences":complete_collection_of_all_tables_occurences,
+        "expected_events_counts":get_expected_events(save_input_file_to),
+        "save_input_file_to":os.path.basename(save_input_file_to),
+        # "complete_collection_of_all_tables_occurences":complete_collection_of_all_tables_occurences,
     }
 
     with open(metadata_filepath, "w") as m_f:

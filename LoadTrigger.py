@@ -156,7 +156,7 @@ else:
   while how_many_msgs_to_send:
     if metadata_contents and shuffle_inputfile_if_reached_end:
         decayed_delay_trigger = DELAY_BETWEEN_TRIGGER * 0.9977777778
-        regenerate_same_inputfile(metadata_contents["complete_collection_of_all_tables_occurences"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"],metadata_contents["tables_template_file"])
+        regenerate_same_inputfile(metadata_contents["weightage_mapping"], input_file_path, metadata_contents["num_of_msgs_to_form"], metadata_contents["num_records_per_table"],metadata_contents["tables_template_file"])
         regeneration_count+=1
         logging.info(f"Metadata contents found.. so inputfile is regenerated. regeneration_count : {regeneration_count}")
 
