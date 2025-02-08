@@ -81,7 +81,7 @@ start_time = time.time()
 iteration_count = 0
 regeneration_count = 0
 total_analyse_time = 0
-
+metadata_contents = None
 decayed_delay_trigger = DELAY_BETWEEN_TRIGGER
 
 input_file_path = os.path.join(INPUT_FILES_PATH, testinput_contents['inputfile'])
@@ -107,7 +107,7 @@ if not os.path.isfile(input_file_path):
             if "variation1" in inside_of_action: #this is probably an events table
                 all_variation_keys = list(inside_of_action.keys())
                 random_variation_keys = random.choices(all_variation_keys, k=num_records_per_table*num_tables_per_msg)
-                logging.info(f"Random variation keys are : {random_variation_keys}")
+                # logging.info(f"Random variation keys are : {random_variation_keys}")
 
                 for each_variation_key in random_variation_keys:
                     single_message_template["data"].append(inside_of_action[each_variation_key])
@@ -148,8 +148,7 @@ else:
   if os.path.exists(metadata_filepath):
     with open(metadata_filepath, "r") as m_f:
       metadata_contents = json.load(m_f)
-  else:
-      metadata_contents = None
+
 
 
 
