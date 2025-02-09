@@ -985,7 +985,6 @@
                 "name": "process_file_events",
                 "calendarTime": "Wed Jul 15 14:07:08 2020 UTC",
                 "epoch": 0,
-                
                 "unixTime": 1594822028,
                 "action": "added",
                 "columns": {
@@ -1648,6 +1647,707 @@
             }
         }
     },
+    "http_events": {
+        "added": {
+            "name": "http_events",
+            "calendarTime": "Wed Jul 15 14:06:10 2020 UTC",
+            "epoch": 0,
+            "unixTime": 1594821970,
+            "action": "added",
+            "columns": {
+                "protocol": "",
+                "s_port": "60549",
+                "uri": "/5000.html",
+                "ja3_fingerprint": "",
+                "ja3": "",
+                "port": "0",
+                "other_headers": "{\"accept\":\"*/*\",\"x-xact\":\"\",\"x-abort\":\"\",\"x-phase-sync-pos\":\"\",\"connection\":\"\"}",
+                "host": "10.0.4.3",
+                "eid": "0016187201",
+                "content_type": "",
+                "time": "1594821970",
+                "d_port": "80",
+                "remote": "10.0.4.3",
+                "local": "10.0.4.7",
+                "method": "GET",
+                "user_agent": ""
+            },
+            "hostIdentifier": "E720FE15-C782-4053-8FFA-E8CAC2957311"
+        }
+    },
+    "process_open_sockets": {
+        "added": {
+            "name": "process_open_sockets",
+            "calendarTime": "Wed Jul 15 21:12:32 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741352989",
+            "unixTime": "1594847552",
+            "action": "added",
+            "columns": {
+                "family": 1,
+                "fd": 6,
+                "local_address": "",
+                "local_port": 0,
+                "net_namespace": "4026531992",
+                "path": "",
+                "pid": 2456235,
+                "protocol": 0,
+                "remote_address": "",
+                "remote_port": 0,
+                "socket": 291159112,
+                "state": ""
+            },
+            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
+        }
+    },
+    "zerotrust_checks": {
+        "added": {
+            "name": "zerotrust_checks",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "average_memory": "357614",
+                "avg_system_time": "651",
+                "avg_user_time": "2145",
+                "executions": "4197",
+                "interval": "300",
+                "last_executed": "1714943745",
+                "output_size": "305280380",
+                "wall_time": "31387",
+                "__rid__": "ffd143eceace9ba8f41751d318f8d67b4df76cf8"
+            },
+            "hostIdentifier": "30e27539-785c-4157-8e6e-31a66195389f",
+            "action": "added",
+            "unixTime": "1714944011",
+            "epoch": "1714821813847",
+            "counter": "18"
+        },
+        "removed": {
+            "name": "zerotrust_checks",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "average_memory": "1132104",
+                "blacklisted": "0",
+                "executions": "38",
+                "interval": "300",
+                "last_executed": "1714923748",
+                "last_memory": "81920",
+                "last_system_time": "3187",
+                "last_user_time": "3281",
+                "last_wall_time_ms": "8796",
+                "output_size": "1900535",
+                "query": "SELECT * FROM zerotrust_checks where standard = 'zerotrust_checks'",
+                "system_time": "121401",
+                "user_time": "125998",
+                "wall_time": "305",
+                "wall_time_ms": "332595",
+                "__rid__": "1313a7692b1d5d8154ab32e97312c199726e8004"
+            },
+            "hostIdentifier": "564D05F6-887C-51CD-F669-05ABA18AFA2E",
+            "action": "removed",
+            "unixTime": "1714943691",
+            "epoch": "1714864086343",
+            "counter": "4"
+        }
+    },
+    "ebpf_dns_lookup_events": {
+        "added": {
+            "name": "ebpf_dns_lookup_events",
+            "calendarTime": "Wed Jul 15 21:12:01 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741312533",
+            "unixTime": "1594847521",
+            "action": "added",
+            "columns": {
+                "ancestor_list": "[{\"exe_name\":\"sshd\",\"pid\":453,\"ppid\":1,\"path\":\"/usr/sbin/sshd\",\"cmdline\":\"sshd: /usr/sbin/sshd -D -e [listener] 0 of 10-100 startups\",\"proc_time\":14,\"proc_time_hr\":168458549952,\"upt_rid\":\"168458549952-453\",\"pproc_time_hr\":168458548514}, {\"exe_name\":\"systemd\",\"pid\":1,\"ppid\":0,\"path\":\"/usr/lib/systemd/systemd\",\"cmdline\":\"/usr/lib/systemd/systemd noresume ,firmware cros_efi\",\"proc_time\":0,\"proc_time_hr\":168458548514,\"upt_rid\":\"168458548514-1\"}, {\"pid\":0}]",
+                "answer": "103.250.11.82",
+                "answers": "[\"103.250.11.82\"]",
+                "auid": 4294967295,
+                "cmdline": "/usr/sbin/sshd -D -e -R",
+                "egid": 0,
+                "euid": 0,
+                "event_time": 1685444347042,
+                "exe_name": "sshd",
+                "gid": 0,
+                "is_container_process": 0,
+                "is_on_disk": 1,
+                "monotonic_time": 858861275115520,
+                "name": "sshd",
+                "path": "/usr/sbin/sshd",
+                "pid": 1131221,
+                "pid_namespace": 4026531836,
+                "ppid": 453,
+                "question": "103.250.11.82",
+                "return_code": "SUCCESS",
+                "start_time": 858859,
+                "time": 1685444347,
+                "type": "A",
+                "uid": 0,
+                "uname": "root",
+                "upt_rid": "168544434489-1131221"
+            },
+            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
+        }
+    },
+    "user_events": {
+        "added": {
+            "name": "user_events",
+            "calendarTime": "Wed Jul 15 14:40:29 2020 UTC",
+            "epoch": 0,
+            "unixTime": 1594824029,
+            "action": "added",
+            "columns": {
+                "auid": "4294967295",
+                "uptime": "162944",
+                "uid": "0",
+                "time": "1594824029",
+                "pid": "1",
+                "terminal": "?",
+                "uname": "root",
+                "eid": "0000187087",
+                "address": "?",
+                "path": "/usr/lib/systemd/systemd",
+                "message": "unit=sysstat-collect",
+                "type": "1130",
+                "login_name": ""
+            },
+            "hostIdentifier": "d433e63f-39ee-49c1-8328-d8707bf66c2e"
+        }
+    },
+    "wmi_query_events": {
+        "added": {
+            "name": "wmi_query_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "9542",
+                "filtering_time_ms": "9",
+                "processing_time_ms": "5740",
+                "publisher": "wmi_query_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "subscriber",
+                "__rid__": "ef3ce058f26857306fe03d965ae13ea98a7bc06c"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "added",
+            "unixTime": "1714942364",
+            "epoch": "1714854855443",
+            "counter": "157"
+        },
+        "removed": {
+            "name": "wmi_query_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "9796",
+                "filtering_time_ms": "0",
+                "processing_time_ms": "0",
+                "publisher": "wmi_query_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "publisher",
+                "__rid__": "f799e80cbb12401ac2c6013784274e2cdbb1eecb"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "removed",
+            "unixTime": "1714942364",
+            "epoch": "1714854855443",
+            "counter": "157"
+        }
+    },
+    "diag_watcher_stats": {
+        "removed": {
+            "name": "diag_watcher_stats",
+            "calendarTime": "Wed Jul 15 16:59:05 2020 UTC",
+            "counter": "11",
+            "epoch": "1594791155833",
+            "unixTime": "1594832345",
+            "action": "removed",
+            "columns": {
+                "osquery_cpu_utilization": "0",
+                "total_memory": "8363585536",
+                "memory_free": "2269114368",
+                "osquery_sustainable_cpu_utilization": "0",
+                "rocks_db_size": "6890",
+                "reset_db_on_worker_restart": "0",
+                "__rid__": "58bc8541f390228b2d50214e7d2d4901572c0f3e",
+                "cpu_cores": "4",
+                "watcher_pid": "10323",
+                "message_from_watcher": "",
+                "osquery_worker_memory": "59652000",
+                "time": "1594828506",
+                "worker_instance_id": "432e4c05-ff76-459b-8603-963e0c6b5399",
+                "descriptor_count": "28",
+                "watcher_instance_id": "edb7a3a2-261f-4dbc-9792-eb15bd1696a6",
+                "worker_pid": "10327"
+            },
+            "hostIdentifier": "E720FE15-C782-4053-8FFA-E8CAC2957311"
+        },
+        "added": {
+            "name": "diag_watcher_stats",
+            "calendarTime": "Wed Jul 15 21:09:45 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741297754",
+            "unixTime": "1594847385",
+            "action": "added",
+            "columns": {
+                "osquery_cpu_utilization": "10",
+                "total_memory": "67558985728",
+                "memory_free": "62644908032",
+                "osquery_sustainable_cpu_utilization": "3",
+                "rocks_db_size": "0",
+                "reset_db_on_worker_restart": "0",
+                "__rid__": "c1227f24f40cb1578619fe4d225e281a5dcbca0c",
+                "cpu_cores": "16",
+                "watcher_pid": "7619",
+                "message_from_watcher": "osqueryd worker respawning but not too quickly.Resetting count.",
+                "osquery_worker_memory": "50868000",
+                "time": "1594846817",
+                "worker_instance_id": "cf706681-01d3-455f-ad13-e81c63187edc",
+                "descriptor_count": "0",
+                "watcher_instance_id": "dae9c644-cae9-4fda-81e0-667e5d25bbb3",
+                "worker_pid": "9100"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        }
+    },
+    "image_load_events": {
+        "added": {
+            "name": "image_load_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "12086",
+                "filtering_time_ms": "20",
+                "processing_time_ms": "125950",
+                "publisher": "etw_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "subscriber",
+                "__rid__": "f5c2c0c8d443eb9d742e3732246e9689aefb69cc"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "added",
+            "unixTime": "1714942364",
+            "epoch": "1714854855443",
+            "counter": "157"
+        },
+        "removed": {
+            "name": "image_load_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "12085",
+                "filtering_time_ms": "20",
+                "processing_time_ms": "125870",
+                "publisher": "etw_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "subscriber",
+                "__rid__": "a576d468e10f7c78a2f459668a9a487ca4f6dc8b"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "removed",
+            "unixTime": "1714942364",
+            "epoch": "1714854855443",
+            "counter": "157"
+        }
+    },
+    "registry_events": {
+        "added": {
+            "name": "registry_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "385566",
+                "filtering_time_ms": "919",
+                "processing_time_ms": "538977",
+                "publisher": "etw_events",
+                "refreshes": "0",
+                "subscriptions": "85",
+                "type": "subscriber",
+                "__rid__": "623bd9c5b0526a5a45891f7564752b9e5847ae1d"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "added",
+            "unixTime": "1714942364",
+            "epoch": "1714854855443",
+            "counter": "157"
+        },
+        "removed": {
+            "name": "registry_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "186827",
+                "filtering_time_ms": "856",
+                "processing_time_ms": "861",
+                "publisher": "etw_events",
+                "refreshes": "0",
+                "subscriptions": "85",
+                "type": "subscriber",
+                "__rid__": "d98a77007fd629556dd75aa1c2bd0f22b5e71f63"
+            },
+            "hostIdentifier": "FC6C4D56-A699-4B74-64B0-96D564C1BE2E",
+            "action": "removed",
+            "unixTime": "1714942411",
+            "epoch": "1714821742528",
+            "counter": "200"
+        }
+    },
+    "powershell_events": {
+        "added": {
+            "name": "powershell_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "814",
+                "filtering_time_ms": "2",
+                "processing_time_ms": "954",
+                "publisher": "windows_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "subscriber",
+                "__rid__": "7646c484e4606f5559edaebb65efff00dc316623"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "added",
+            "unixTime": "1714942919",
+            "epoch": "1714854855443",
+            "counter": "158"
+        },
+        "removed": {
+            "name": "powershell_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "812",
+                "filtering_time_ms": "2",
+                "processing_time_ms": "953",
+                "publisher": "windows_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "subscriber",
+                "__rid__": "57a86ebd56bc0f0bb1d0164c2a438ace40336bdc"
+            },
+            "hostIdentifier": "EFEA4D56-4972-B8BE-5106-F894ECF406FA",
+            "action": "removed",
+            "unixTime": "1714942919",
+            "epoch": "1714854855443",
+            "counter": "158"
+        }
+    },
+    "docker_events": {
+        "added": {
+            "name": "docker_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "40",
+                "filtering_time_ms": "0",
+                "processing_time_ms": "0",
+                "publisher": "docker_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "publisher",
+                "__rid__": "4f866707b11b753a3d5b556cc783d86fb657d2dc"
+            },
+            "hostIdentifier": "049e484e-c162-4967-b1d5-e267ecd7b91b",
+            "action": "added",
+            "unixTime": "1716515209",
+            "epoch": "1716471510208",
+            "counter": "24"
+        },
+        "removed": {
+            "name": "docker_events",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "active": "1",
+                "events": "0",
+                "filtering_time_ms": "0",
+                "processing_time_ms": "0",
+                "publisher": "docker_events",
+                "refreshes": "0",
+                "subscriptions": "1",
+                "type": "publisher",
+                "__rid__": "a261b340aa41467b8b3190a080183ff2c7b8ecd6"
+            },
+            "hostIdentifier": "049e484e-c162-4967-b1d5-e267ecd7b91b",
+            "action": "removed",
+            "unixTime": "1716514643",
+            "epoch": "1716471510208",
+            "counter": "23"
+        }
+    },
+    "vulnerabilities": {
+        "added": {
+            "name": "vulnerabilities",
+            "calendarTime": "Wed Jul 15 21:12:01 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741312533",
+            "unixTime": "1594847521",
+            "action": "added",
+            "columns": {
+                "package_type": "pip",
+                "directory": "/Library/Python/3.8/site-packages/numpy-1.21.2-py3.8-macosx-10.14.6-x86_64.egg",
+                "os": "pip",
+                "package_name": "numpy",
+                "package_version": "1.21.2",
+                "indicator_type": "Uptycs",
+                "indicator_version": "1.21.6",
+                "indicator_operator": "lte",
+                "cve_list": "CVE-2021-34141",
+                "cvss_score": "5.3",
+                "indicator_hash": "5f31901f-d90c-1ff7-7851-2c6a080a523e",
+                "path": "/Library/Python/3.8/site-packages/numpy-1.21.2-py3.8-macosx-10.14.6-x86_64.egg/EGG-INFO/",
+                "scan_id": "d4446955-22fc-4db7-a7bc-4d292cb952ea",
+                "ignored_cvss": "7",
+                "ignored_no_fix": "0"
+            },
+            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
+        }
+    },
+    "crio_containers": {
+        "added": {
+            "name": "crio_containers",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "average_memory": "9581",
+                "blacklisted": "0",
+                "executions": "1546",
+                "interval": "300",
+                "last_executed": "1714944219",
+                "last_memory": "16000",
+                "last_system_time": "10",
+                "last_user_time": "10",
+                "last_wall_time_ms": "11",
+                "output_size": "0",
+                "query": "select * from crio_containers;",
+                "system_time": "830",
+                "user_time": "1700",
+                "wall_time": "0",
+                "wall_time_ms": "16761",
+                "__rid__": "30632145b9576013ed4d6273145802c07e1ff33d"
+            },
+            "hostIdentifier": "E8B54D56-E01C-5935-C2B1-B159F90932EA",
+            "action": "added",
+            "unixTime": "1714944234",
+            "epoch": "1714821346838",
+            "counter": "5"
+        },
+        "removed": {
+            "name": "crio_containers",
+            "calendarTime": "Tue May 23 14:11:55 2023 UTC",
+            "columns": {
+                "average_memory": "9581",
+                "blacklisted": "0",
+                "executions": "1474",
+                "interval": "300",
+                "last_executed": "1714922390",
+                "last_memory": "16000",
+                "last_system_time": "10",
+                "last_user_time": "10",
+                "last_wall_time_ms": "10",
+                "output_size": "0",
+                "query": "select * from crio_containers;",
+                "system_time": "790",
+                "user_time": "1590",
+                "wall_time": "0",
+                "wall_time_ms": "16021",
+                "__rid__": "c8f4df97ab66541a57791bdf74357ef5519e23c9"
+            },
+            "hostIdentifier": "E8B54D56-E01C-5935-C2B1-B159F90932EA",
+            "action": "removed",
+            "unixTime": "1714944234",
+            "epoch": "1714821346838",
+            "counter": "5"
+        }
+    },
+    "process_cpu": {
+        "added": {
+            "name": "process_cpu",
+            "calendarTime": "Wed Jul 15 20:59:54 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741297754",
+            "unixTime": "1594846794",
+            "action": "added",
+            "columns": {
+                "system_time": "1130660",
+                "start_time": "0",
+                "pid": "1",
+                "cmdline": "/sbin/init",
+                "__rid__": "e791d0c52295e002a02579320506d61a649585f5",
+                "user_time": "2174000"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        }
+    },
+    "process_envs": {
+        "removed": {
+            "name": "process_envs",
+            "calendarTime": "Wed Jul 15 21:16:13 2020 UTC",
+            "counter": "3",
+            "epoch": "1594741312550",
+            "unixTime": "1594847773",
+            "action": "removed",
+            "columns": {
+                "__rid__": "02ee111f66f2e45a9bc6f2f4be047379ef9208c6",
+                "pid": "19824",
+                "value": "true",
+                "key": "CALICO_DISABLE_FILE_LOGGING"
+            },
+            "hostIdentifier": "ECC2C786-0C16-47AF-AD97-51181BFD7C01"
+        },
+        "added": {
+            "name": "process_envs",
+            "calendarTime": "Wed Jul 15 21:00:31 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741297754",
+            "unixTime": "1594846831",
+            "action": "added",
+            "columns": {
+                "__rid__": "5b186cd6716907a0bf4474d098b4ac4e8a33d610",
+                "pid": "1",
+                "value": "/",
+                "key": "HOME"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        }
+    },
+    "containerd_events": {
+        "added": {
+            "name": "containerd_events",
+            "calendarTime": "Wed Jul 15 21:12:01 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741312533",
+            "unixTime": "1594847521",
+            "action": "added",
+            "columns": {
+                "action": "containerd.events.TaskExit",
+                "bundle": "",
+                "checkpoint": "",
+                "container_id": "fb31d1b7cc112227079c12c270d1e408e4b9d90f3cec1cd917da813d85616879",
+                "digest": "",
+                "exec_id": "",
+                "exit_status": 0,
+                "exited_at": "2023-05-30T10:59:03.598712258Z",
+                "id": "cd821704096024aa070ee9b45a4fb5216c9af2c460c1fbb5d85bb9a968a2ccbe",
+                "image": "",
+                "key": "",
+                "labels": "",
+                "name": "",
+                "namespace": "k8s.io",
+                "parent": "",
+                "pid": 32690,
+                "time": 0
+            },
+            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
+        }
+    },
+    "processes": {
+        "removed": {
+            "name": "processes",
+            "calendarTime": "Wed Jul 15 20:59:27 2020 UTC",
+            "counter": "2",
+            "epoch": "1594741297754",
+            "unixTime": "1594846767",
+            "action": "removed",
+            "columns": {
+                "cpu_subtype": "",
+                "uid": "1002",
+                "pid": "11309",
+                "cmdline": "/bin/bash /opt/uptycs/monitoring/connectivity.sh",
+                "sgid": "0",
+                "pid_ns": "4026531836",
+                "suid": "0",
+                "gid": "0",
+                "is_container_process": "0",
+                "cwd": "/",
+                "nice": "0",
+                "parent": "979",
+                "upid": "",
+                "__rid__": "93d89fc50311e695c71220d2f3a32e2bb75f868b",
+                "euid": "0",
+                "pgroup": "0",
+                "path": "/usr/bin/bash",
+                "name": "connectivity.sh",
+                "on_disk": "1",
+                "is_elevated_token": "",
+                "egid": "0",
+                "cpu_type": "",
+                "uppid": "",
+                "root": "/"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        },
+        "added": {
+            "name": "processes",
+            "calendarTime": "Wed Jul 15 20:59:27 2020 UTC",
+            "counter": "2",
+            "epoch": "1594741297754",
+            "unixTime": "1594846767",
+            "action": "added",
+            "columns": {
+                "cpu_subtype": "",
+                "uid": "0",
+                "pid": "9100",
+                "cmdline": "/opt/uptycs/osquery/bin/osqueryd",
+                "sgid": "0",
+                "pid_ns": "4026531836",
+                "suid": "0",
+                "gid": "0",
+                "is_container_process": "0",
+                "cwd": "/",
+                "nice": "10",
+                "parent": "7619",
+                "upid": "",
+                "__rid__": "1b6fb223ec8cce22c0d3e91c15b341daa068c548",
+                "euid": "0",
+                "pgroup": "7619",
+                "path": "/opt/uptycs/osquery/bin/osqueryd",
+                "name": "osqueryd",
+                "on_disk": "1",
+                "is_elevated_token": "",
+                "egid": "0",
+                "cpu_type": "",
+                "uppid": "",
+                "root": "/"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        }
+    },
+    "process_open_files": {
+        "removed": {
+            "name": "process_open_files",
+            "calendarTime": "Wed Jul 15 21:10:10 2020 UTC",
+            "counter": "2",
+            "epoch": "1594741297754",
+            "unixTime": "1594847410",
+            "action": "removed",
+            "columns": {
+                "path": "/opt/uptycs/osquery/osquery.db/MANIFEST-000016",
+                "pid": "9100",
+                "fd": "10",
+                "__rid__": "34375f6754c7f58caef4ca9f301600bffb6e0920"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        },
+        "added": {
+            "name": "process_open_files",
+            "calendarTime": "Wed Jul 15 20:59:54 2020 UTC",
+            "counter": "0",
+            "epoch": "1594741297754",
+            "unixTime": "1594846794",
+            "action": "added",
+            "columns": {
+                "path": "/proc/uptime",
+                "pid": "1",
+                "fd": "0",
+                "__rid__": "a48e43b9885de0eaddc74104d5ded5b6b4480cec"
+            },
+            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
+        }
+    },
     "apparmor_profiles": {
         "added": {
             "name": "apparmor_profiles",
@@ -1743,31 +2443,6 @@
                 "name": "Reserved"
             },
             "hostIdentifier": "F61BDC33-761D-4D5D-955B-C6372A95849E"
-        }
-    },
-    "user_events": {
-        "added": {
-            "name": "user_events",
-            "calendarTime": "Wed Jul 15 14:40:29 2020 UTC",
-            "epoch": 0,
-            "unixTime": 1594824029,
-            "action": "added",
-            "columns": {
-                "auid": "4294967295",
-                "uptime": "162944",
-                "uid": "0",
-                "time": "1594824029",
-                "pid": "1",
-                "terminal": "?",
-                "uname": "root",
-                "eid": "0000187087",
-                "address": "?",
-                "path": "/usr/lib/systemd/systemd",
-                "message": "unit=sysstat-collect",
-                "type": "1130",
-                "login_name": ""
-            },
-            "hostIdentifier": "d433e63f-39ee-49c1-8328-d8707bf66c2e"
         }
     },
     "listening_ports": {
@@ -2035,78 +2710,6 @@
                 "inactive": "-1",
                 "expire": "-1",
                 "last_change": "18265"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        }
-    },
-    "processes": {
-        "removed": {
-            "name": "processes",
-            "calendarTime": "Wed Jul 15 20:59:27 2020 UTC",
-            "counter": "2",
-            "epoch": "1594741297754",
-            "unixTime": "1594846767",
-            "action": "removed",
-            "columns": {
-                "cpu_subtype": "",
-                "uid": "1002",
-                "pid": "11309",
-                "cmdline": "/bin/bash /opt/uptycs/monitoring/connectivity.sh",
-                "sgid": "0",
-                "pid_ns": "4026531836",
-                "suid": "0",
-                "gid": "0",
-                "is_container_process": "0",
-                "cwd": "/",
-                "nice": "0",
-                "parent": "979",
-                "upid": "",
-                "__rid__": "93d89fc50311e695c71220d2f3a32e2bb75f868b",
-                "euid": "0",
-                "pgroup": "0",
-                "path": "/usr/bin/bash",
-                "name": "connectivity.sh",
-                "on_disk": "1",
-                "is_elevated_token": "",
-                "egid": "0",
-                "cpu_type": "",
-                "uppid": "",
-                "root": "/"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        },
-        "added": {
-            "name": "processes",
-            "calendarTime": "Wed Jul 15 20:59:27 2020 UTC",
-            "counter": "2",
-            "epoch": "1594741297754",
-            "unixTime": "1594846767",
-            "action": "added",
-            "columns": {
-                "cpu_subtype": "",
-                "uid": "0",
-                "pid": "9100",
-                "cmdline": "/opt/uptycs/osquery/bin/osqueryd",
-                "sgid": "0",
-                "pid_ns": "4026531836",
-                "suid": "0",
-                "gid": "0",
-                "is_container_process": "0",
-                "cwd": "/",
-                "nice": "10",
-                "parent": "7619",
-                "upid": "",
-                "__rid__": "1b6fb223ec8cce22c0d3e91c15b341daa068c548",
-                "euid": "0",
-                "pgroup": "7619",
-                "path": "/opt/uptycs/osquery/bin/osqueryd",
-                "name": "osqueryd",
-                "on_disk": "1",
-                "is_elevated_token": "",
-                "egid": "0",
-                "cpu_type": "",
-                "uppid": "",
-                "root": "/"
             },
             "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
         }
@@ -3049,34 +3652,6 @@
             "hostIdentifier": "DF5DC03A-5E17-4268-B257-AB8378C41FF9"
         }
     },
-    "http_events": {
-        "added": {
-            "name": "http_events",
-            "calendarTime": "Wed Jul 15 14:06:10 2020 UTC",
-            "epoch": 0,
-            "unixTime": 1594821970,
-            "action": "added",
-            "columns": {
-                "protocol": "",
-                "s_port": "60549",
-                "uri": "/5000.html",
-                "ja3_fingerprint": "",
-                "ja3": "",
-                "port": "0",
-                "other_headers": "{\"accept\":\"*/*\",\"x-xact\":\"\",\"x-abort\":\"\",\"x-phase-sync-pos\":\"\",\"connection\":\"\"}",
-                "host": "10.0.4.3",
-                "eid": "0016187201",
-                "content_type": "",
-                "time": "1594821970",
-                "d_port": "80",
-                "remote": "10.0.4.3",
-                "local": "10.0.4.7",
-                "method": "GET",
-                "user_agent": ""
-            },
-            "hostIdentifier": "E720FE15-C782-4053-8FFA-E8CAC2957311"
-        }
-    },
     "md_personalities": {
         "added": {
             "name": "md_personalities",
@@ -3393,62 +3968,6 @@
                 "address": "192.168.8.1",
                 "type": "nameserver",
                 "options": "524993"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        }
-    },
-    "diag_watcher_stats": {
-        "removed": {
-            "name": "diag_watcher_stats",
-            "calendarTime": "Wed Jul 15 16:59:05 2020 UTC",
-            "counter": "11",
-            "epoch": "1594791155833",
-            "unixTime": "1594832345",
-            "action": "removed",
-            "columns": {
-                "osquery_cpu_utilization": "0",
-                "total_memory": "8363585536",
-                "memory_free": "2269114368",
-                "osquery_sustainable_cpu_utilization": "0",
-                "rocks_db_size": "6890",
-                "reset_db_on_worker_restart": "0",
-                "__rid__": "58bc8541f390228b2d50214e7d2d4901572c0f3e",
-                "cpu_cores": "4",
-                "watcher_pid": "10323",
-                "message_from_watcher": "",
-                "osquery_worker_memory": "59652000",
-                "time": "1594828506",
-                "worker_instance_id": "432e4c05-ff76-459b-8603-963e0c6b5399",
-                "descriptor_count": "28",
-                "watcher_instance_id": "edb7a3a2-261f-4dbc-9792-eb15bd1696a6",
-                "worker_pid": "10327"
-            },
-            "hostIdentifier": "E720FE15-C782-4053-8FFA-E8CAC2957311"
-        },
-        "added": {
-            "name": "diag_watcher_stats",
-            "calendarTime": "Wed Jul 15 21:09:45 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741297754",
-            "unixTime": "1594847385",
-            "action": "added",
-            "columns": {
-                "osquery_cpu_utilization": "10",
-                "total_memory": "67558985728",
-                "memory_free": "62644908032",
-                "osquery_sustainable_cpu_utilization": "3",
-                "rocks_db_size": "0",
-                "reset_db_on_worker_restart": "0",
-                "__rid__": "c1227f24f40cb1578619fe4d225e281a5dcbca0c",
-                "cpu_cores": "16",
-                "watcher_pid": "7619",
-                "message_from_watcher": "osqueryd worker respawning but not too quickly.Resetting count.",
-                "osquery_worker_memory": "50868000",
-                "time": "1594846817",
-                "worker_instance_id": "cf706681-01d3-455f-ad13-e81c63187edc",
-                "descriptor_count": "0",
-                "watcher_instance_id": "dae9c644-cae9-4fda-81e0-667e5d25bbb3",
-                "worker_pid": "9100"
             },
             "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
         }
@@ -3916,38 +4435,6 @@
             "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
         }
     },
-    "process_envs": {
-        "removed": {
-            "name": "process_envs",
-            "calendarTime": "Wed Jul 15 21:16:13 2020 UTC",
-            "counter": "3",
-            "epoch": "1594741312550",
-            "unixTime": "1594847773",
-            "action": "removed",
-            "columns": {
-                "__rid__": "02ee111f66f2e45a9bc6f2f4be047379ef9208c6",
-                "pid": "19824",
-                "value": "true",
-                "key": "CALICO_DISABLE_FILE_LOGGING"
-            },
-            "hostIdentifier": "ECC2C786-0C16-47AF-AD97-51181BFD7C01"
-        },
-        "added": {
-            "name": "process_envs",
-            "calendarTime": "Wed Jul 15 21:00:31 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741297754",
-            "unixTime": "1594846831",
-            "action": "added",
-            "columns": {
-                "__rid__": "5b186cd6716907a0bf4474d098b4ac4e8a33d610",
-                "pid": "1",
-                "value": "/",
-                "key": "HOME"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        }
-    },
     "sudoers": {
         "added": {
             "name": "sudoers",
@@ -4093,57 +4580,6 @@
             "hostIdentifier": "F61BDC33-761D-4D5D-955B-C6372A95849E"
         }
     },
-    "process_cpu": {
-        "added": {
-            "name": "process_cpu",
-            "calendarTime": "Wed Jul 15 20:59:54 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741297754",
-            "unixTime": "1594846794",
-            "action": "added",
-            "columns": {
-                "system_time": "1130660",
-                "start_time": "0",
-                "pid": "1",
-                "cmdline": "/sbin/init",
-                "__rid__": "e791d0c52295e002a02579320506d61a649585f5",
-                "user_time": "2174000"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        }
-    },
-    "process_open_files": {
-        "removed": {
-            "name": "process_open_files",
-            "calendarTime": "Wed Jul 15 21:10:10 2020 UTC",
-            "counter": "2",
-            "epoch": "1594741297754",
-            "unixTime": "1594847410",
-            "action": "removed",
-            "columns": {
-                "path": "/opt/uptycs/osquery/osquery.db/MANIFEST-000016",
-                "pid": "9100",
-                "fd": "10",
-                "__rid__": "34375f6754c7f58caef4ca9f301600bffb6e0920"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        },
-        "added": {
-            "name": "process_open_files",
-            "calendarTime": "Wed Jul 15 20:59:54 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741297754",
-            "unixTime": "1594846794",
-            "action": "added",
-            "columns": {
-                "path": "/proc/uptime",
-                "pid": "1",
-                "fd": "0",
-                "__rid__": "a48e43b9885de0eaddc74104d5ded5b6b4480cec"
-            },
-            "hostIdentifier": "DED749E2-E501-45E7-8188-A7469B064FE9"
-        }
-    },
     "docker_container_labels": {
         "removed": {
             "name": "docker_container_labels",
@@ -4248,34 +4684,6 @@
                 "source": "None",
                 "status": "inactive",
                 "username": "None"
-            },
-            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
-        }
-    },
-    "vulnerabilities": {
-        "added": {
-            "name": "vulnerabilities",
-            "calendarTime": "Wed Jul 15 21:12:01 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741312533",
-            "unixTime": "1594847521",
-            "action": "added",
-            "columns": {
-                "package_type": "pip",
-                "directory": "/Library/Python/3.8/site-packages/numpy-1.21.2-py3.8-macosx-10.14.6-x86_64.egg",
-                "os": "pip",
-                "package_name": "numpy",
-                "package_version": "1.21.2",
-                "indicator_type": "Uptycs",
-                "indicator_version": "1.21.6",
-                "indicator_operator": "lte",
-                "cve_list": "CVE-2021-34141",
-                "cvss_score": "5.3",
-                "indicator_hash": "5f31901f-d90c-1ff7-7851-2c6a080a523e",
-                "path": "/Library/Python/3.8/site-packages/numpy-1.21.2-py3.8-macosx-10.14.6-x86_64.egg/EGG-INFO/",
-                "scan_id": "d4446955-22fc-4db7-a7bc-4d292cb952ea",
-                "ignored_cvss": "7",
-                "ignored_no_fix": "0"
             },
             "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
         }
@@ -5303,75 +5711,6 @@
             }
         }
     },
-    "ebpf_dns_lookup_events": {
-        "added": {
-            "name": "ebpf_dns_lookup_events",
-            "calendarTime": "Wed Jul 15 21:12:01 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741312533",
-            "unixTime": "1594847521",
-            "action": "added",
-            "columns": {
-                "ancestor_list": "[{\"exe_name\":\"sshd\",\"pid\":453,\"ppid\":1,\"path\":\"/usr/sbin/sshd\",\"cmdline\":\"sshd: /usr/sbin/sshd -D -e [listener] 0 of 10-100 startups\",\"proc_time\":14,\"proc_time_hr\":168458549952,\"upt_rid\":\"168458549952-453\",\"pproc_time_hr\":168458548514}, {\"exe_name\":\"systemd\",\"pid\":1,\"ppid\":0,\"path\":\"/usr/lib/systemd/systemd\",\"cmdline\":\"/usr/lib/systemd/systemd noresume ,firmware cros_efi\",\"proc_time\":0,\"proc_time_hr\":168458548514,\"upt_rid\":\"168458548514-1\"}, {\"pid\":0}]",
-                "answer": "103.250.11.82",
-                "answers": "[\"103.250.11.82\"]",
-                "auid": 4294967295,
-                "cmdline": "/usr/sbin/sshd -D -e -R",
-                "egid": 0,
-                "euid": 0,
-                "event_time": 1685444347042,
-                "exe_name": "sshd",
-                "gid": 0,
-                "is_container_process": 0,
-                "is_on_disk": 1,
-                "monotonic_time": 858861275115520,
-                "name": "sshd",
-                "path": "/usr/sbin/sshd",
-                "pid": 1131221,
-                "pid_namespace": 4026531836,
-                "ppid": 453,
-                "question": "103.250.11.82",
-                "return_code": "SUCCESS",
-                "start_time": 858859,
-                "time": 1685444347,
-                "type": "A",
-                "uid": 0,
-                "uname": "root",
-                "upt_rid": "168544434489-1131221"
-            },
-            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
-        }
-    },
-    "containerd_events": {
-        "added": {
-            "name": "containerd_events",
-            "calendarTime": "Wed Jul 15 21:12:01 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741312533",
-            "unixTime": "1594847521",
-            "action": "added",
-            "columns": {
-                "action": "containerd.events.TaskExit",
-                "bundle": "",
-                "checkpoint": "",
-                "container_id": "fb31d1b7cc112227079c12c270d1e408e4b9d90f3cec1cd917da813d85616879",
-                "digest": "",
-                "exec_id": "",
-                "exit_status": 0,
-                "exited_at": "2023-05-30T10:59:03.598712258Z",
-                "id": "cd821704096024aa070ee9b45a4fb5216c9af2c460c1fbb5d85bb9a968a2ccbe",
-                "image": "",
-                "key": "",
-                "labels": "",
-                "name": "",
-                "namespace": "k8s.io",
-                "parent": "",
-                "pid": 32690,
-                "time": 0
-            },
-            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
-        }
-    },
     "osquery_memory": {
         "added": {
             "name": "osquery_memory",
@@ -5406,31 +5745,6 @@
                 "source": "compliance_checks",
                 "standard": "uptycs_uds_windows",
                 "time": 1685444352
-            },
-            "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
-        }
-    },
-    "process_open_sockets": {
-        "added": {
-            "name": "process_open_sockets",
-            "calendarTime": "Wed Jul 15 21:12:32 2020 UTC",
-            "counter": "0",
-            "epoch": "1594741352989",
-            "unixTime": "1594847552",
-            "action": "added",
-            "columns": {
-                "family": 1,
-                "fd": 6,
-                "local_address": "",
-                "local_port": 0,
-                "net_namespace": "4026531992",
-                "path": "",
-                "pid": 2456235,
-                "protocol": 0,
-                "remote_address": "",
-                "remote_port": 0,
-                "socket": 291159112,
-                "state": ""
             },
             "hostIdentifier": "110E1DFA-885B-4B28-B421-21C4CD5AFE62"
         }

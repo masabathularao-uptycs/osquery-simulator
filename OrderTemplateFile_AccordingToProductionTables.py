@@ -33,7 +33,7 @@ for key in prodiction_tables_order:
     else:
         tables_notmatching+=1
         print(f"key {key} not present in the template file. Please add this a record of this table in the file")
-
+print('----------')
 print(f"Total tables in production order file are : {len(prodiction_tables_order)}")
 print(f"Tables matching production file are : {tables_matching}")
 print(f"Tables not matching production file are : {tables_notmatching}")
@@ -46,5 +46,5 @@ for template_key in osq_template_data:
     if template_key not in ordered_dict:
         ordered_dict[template_key] = osq_template_data[template_key]
 print(len(ordered_dict))
-# with open(OSQUERY_TABLES_TEMPLATE_FILE, "w") as f:
-#     json.dump(ordered_dict, f, indent=4)
+with open(OSQUERY_TABLES_TEMPLATE_FILE, "w") as f:
+    json.dump(ordered_dict, f, indent=4)
