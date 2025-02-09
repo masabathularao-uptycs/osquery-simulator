@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import os
-from simulator_config_vars import SIMULATOR_SERVER_PORT,hostname,testinput_file, DELAY_BETWEEN_TRIGGER ,INPUT_FILES_PATH, OSQUERY_TABLES_TEMPLATE_FILE
+from simulator_config_vars import *
 # from flask_session import Session 
 import json
 from helper import execute_shell_command
@@ -45,6 +45,59 @@ def get_input_files():
             "input_files": input_files
         }), 200  # OK
 
+@app.route('/get_inputfile_metadata', methods=['GET'])
+def get_inputfile_metadata():
+    inputfile_name = request.args.get('inputfile_name')
+
+    inputfile_path = os.path.join(INPUT_FILES_PATH,inputfile_name)
+
+    if os.path.isfile(inputfile_path):
+        file_name_without_suffix = os.path.splitext(os.path.basename(inputfile_path))[0]
+        metadata_filepath = os.path.join(INPUTFILES_METADATA_PATH, file_name_without_suffix+".json")
+        with open(metadata_filepath) as m_f:
+            metadata = json.load(m_f)
+            return jsonify({
+                "status": "success",
+                "message": f"Successfully fetched the inputfile metadata for {inputfile_name} from {hostname}",
+                "input_file_details": metadata,
+                "modal_heading" : f"Metadata for '{inputfile_name}'"
+            }), 200  # OK
+
+    else:
+        with open(OSQUERY_TABLES_TEMPLATE_FILE) as tf:
+            osq_template_data = json.load(tf)
+        
+        if inputfile_name in osq_template_data:
+            template = osq_template_data[inputfile_name]
+            sample_record = {}
+            note = "You have selected a direct table. Only records of this table will be used to form the msg on the go.<br>"
+            try:
+                sample_record = template["added"]["variation1"]
+                note += f"Looks like this is an events table. It is recommended to use a pre-generated inputfile for this table if you wanted to calculate accuracies for events too.<br>However if you are only interested in {inputfile_name} table accuracies, you can proceed."
+            except:
+                sample_record = template["added"]
+                
+            return jsonify({
+                    "status": "success",
+                    "message": f"Successfully fetched the sample record for table {inputfile_name} from {hostname}",
+                    "input_file_details": {f"Template for {inputfile_name} table in template file":template,
+                                            "Number of tables per message":NUMBER_OF_TABLES_PER_MSG,
+                                            "Number of records per table":NUMBER_OF_RECORDS_PER_TABLE,
+                                            "Note":note,
+                                            "Sample Record used in the msg formation":sample_record,
+                                            "Tables Template file":OSQUERY_TABLES_TEMPLATE_FILE,
+                                        },
+                    "modal_heading" : f"Details for '{inputfile_name}' table as inputfile"
+
+                }), 200  # OK
+        
+    return jsonify({
+            "status": "error",
+            "message": f"No details found for {inputfile_name} from {hostname}",
+            "input_file_details": f"No details found for {inputfile_name}",
+            "modal_heading" : f"Invalid"
+        }), 404  # OK
+        
 @app.route('/check_sim_health', methods=['GET'])
 def check_sim_health():
     bash_commands = {
