@@ -10,3 +10,5 @@ testinput_json_files/*
 original_go_simulator
 python_simulator_ignore
 testinput.json
+executeload.sh
+checkExecuteLoad.sh
