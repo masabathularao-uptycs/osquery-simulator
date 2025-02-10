@@ -131,3 +131,5 @@ def return_asset_distribution(updated_test_input_params):
         return_dict[f"6.And The last {100-first_x_customer_percentage:.1f}% ({int(num_customers)-(int(num_customers * first_x_customer_percentage/100))}) of customers gets"] = f"{sum(assets_to_enrol_for_each_customer)- sum(assets_to_enrol_for_each_customer[:int(num_customers * first_x_customer_percentage/100)])} assets. "
     print(return_dict)
     return assets_to_enrol_for_each_customer,return_dict
+
+# print(softmax(list(range(100)), 0.71))

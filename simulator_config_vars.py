@@ -16,9 +16,8 @@ testinput_file = os.path.join(ROOT_PATH,"testinput.json")
 
 NUMBER_OF_MSGS_PER_INPUTFILE = 150
 DELAY_BETWEEN_TRIGGER = 4  #this means 1 msg is sent for every 4secodns => timetaken to send 150 msgs is 600sec(10mins)
-
 # therefore , an input file (with 150 msgs, and sending each msg every 4 seconds), has unit load time of 10 mins.
-
+DELAY_DECAY_FACTOR = 0.9975
 # Calculation
 calculated_unit_load_time_in_mins = NUMBER_OF_MSGS_PER_INPUTFILE * DELAY_BETWEEN_TRIGGER / 60
 
@@ -29,6 +28,9 @@ else:
     calculated_unit_load_time_in_mins = float(calculated_unit_load_time_in_mins)
 
 # print(calculated_unit_load_time_in_mins)
+
+FIRST_X_PERCENT_TABLES = 30
+GETS_Y_PERCENT_WEIGHTAGE = 60
 
 NUMBER_OF_TABLES_PER_MSG = 6
 NUMBER_OF_RECORDS_PER_TABLE = 12
