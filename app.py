@@ -4,6 +4,8 @@ from simulator_config_vars import *
 # from flask_session import Session 
 import json
 from helper import execute_shell_command
+from datetime import datetime, timedelta
+import random
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = '343c855017e725321cb7f35b89c98b9e'
@@ -157,7 +159,22 @@ def check_sim_health():
             remaining_load_duration = int(testinput_file_contents["how_many_msgs_to_send"]*DELAY_BETWEEN_TRIGGER) - int(command_outputs["load_running_since_sec"])
         except:
             remaining_load_duration=0
-    
+
+
+        data = []
+        for i in range(30):
+            # Calculate time interval in 5-second decrements
+            time_entry = (datetime.now() - timedelta(seconds=i * 5)).strftime('%H:%M:%S')
+            
+            # Get current CPU usage percentage
+            # cpu_usage_value = psutil.cpu_percent(interval=None)
+            
+            
+            data.append({"time": time_entry, "value": random.randint(40,80)})
+
+        # Reverse to ensure time ordering from past to present
+        data.reverse()
+
         return jsonify({
             "status": "success",
             "message": f"Successfully fetched {hostname} health information.",
@@ -167,7 +184,8 @@ def check_sim_health():
                 "parameter_value":testinput_file_contents
             },
             "main_params":main_params,
-            "load_remaining_dur_in_sec":remaining_load_duration
+            "load_remaining_dur_in_sec":remaining_load_duration,
+            "cpu_stats":data
         }), 200  # OK
 
     except Exception as e:
