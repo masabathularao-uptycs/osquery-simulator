@@ -2,6 +2,7 @@ import random, os
 import json, re
 from LogicForDistributingAssets import return_asset_distribution
 from simulator_config_vars import *
+from OrderTemplateFile_AccordingToProductionTables import order_template_file
 # from datetime import datetime
 
 
@@ -208,6 +209,7 @@ def get_expected_events(save_input_file_to,trans=True):
         return dict1
 
 def main():
+    order_template_file()
     number_of_tables_to_create = NUMBER_OF_MSGS_PER_INPUTFILE*NUMBER_OF_TABLES_PER_MSG
     
     print(number_of_tables_to_create)
