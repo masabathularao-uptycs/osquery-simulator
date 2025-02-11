@@ -36,7 +36,7 @@ NUMBER_OF_TABLES_PER_MSG = 6
 NUMBER_OF_RECORDS_PER_TABLE = 12
 
 
-OSQUERY_TABLES_TEMPLATE_FILE = os.path.join(ROOT_PATH,'tables_template.json')
+OSQUERY_TABLES_TEMPLATE_FILE = 'tables_template.json'
 OSQUERY_TABLES_IMPORTACE_ORDER = os.path.join(ROOT_PATH,'tables_importance_order_according_to_prod.csv')
 
 TIME_BETWEEN_INSTANCE_ENROLLMENT = 20
