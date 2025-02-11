@@ -183,21 +183,6 @@ def check_sim_health():
         except:
             remaining_load_duration=0
 
-
-        data = []
-        for i in range(30):
-            # Calculate time interval in 5-second decrements
-            time_entry = (datetime.now() - timedelta(seconds=i * 5)).strftime('%H:%M:%S')
-            
-            # Get current CPU usage percentage
-            # cpu_usage_value = psutil.cpu_percent(interval=None)
-            
-            
-            data.append({"time": time_entry, "value": random.randint(40,80)})
-
-        # Reverse to ensure time ordering from past to present
-        data.reverse()
-
         with lock:
             current_cpu_usage_list = list(cpu_data_queue)
         

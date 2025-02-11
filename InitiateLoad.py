@@ -58,7 +58,8 @@ def check_instance_state(instance_list,num_expected_instances):
             #print("status" ,status)
             loadcmd=newport(eachinstance)
             Fd1.write(loadcmd +'\n')
-            Fd1.write("sleep 10" +'\n')
+            Fd1.write("sleep " + str(TIME_BETWEEN_INSTANCE_ENROLLMENT) +'\n')
+
       Fd1.write("sleep 20" +'\n')      
       Fd1.close()
       subprocess.getoutput("chmod 777 checkExecuteLoad.sh")
