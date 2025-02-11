@@ -22,14 +22,30 @@ cpu_data_queue = deque(maxlen=300)
 lock = threading.Lock()  # Ensures thread-safe operations
 
 def collect_cpu_usage():
-    """Collect CPU usage every 10 seconds and store it in the global queue."""
+    """Collect average CPU and memory usage over the last CPU_MEMORY_STATS_INTERVAL seconds."""
+    cpu_usage_samples = []
+    memory_usage_samples = []
+
     while True:
-        current_time = time.strftime('%H:%M')  # Get current time in HH:MM format
-        cpu_usage = psutil.cpu_percent(interval=1)
-        ram_usage_gb = psutil.virtual_memory().used / (1024 ** 3)
+        start_time = time.time()
+        while time.time() - start_time < CPU_MEMORY_STATS_INTERVAL:
+            cpu_usage_samples.append(psutil.cpu_percent(interval=1))
+            memory_usage_samples.append(psutil.virtual_memory().used / (1024 ** 3))
+
+        # Calculate the average usage for the interval
+        avg_cpu_usage = sum(cpu_usage_samples) / len(cpu_usage_samples) if cpu_usage_samples else 0
+        avg_memory_usage = sum(memory_usage_samples) / len(memory_usage_samples) if memory_usage_samples else 0
+
+        # Get current time
+        current_time = time.strftime('%H:%M')
+
         with lock:
-            cpu_data_queue.append({"time": current_time, "cpu": cpu_usage, "memory":ram_usage_gb})
-        time.sleep(CPU_MEMORY_STATS_INTERVAL)  # Additional 9 seconds after the 1-second `psutil` interval
+            cpu_data_queue.append({"time": current_time, "cpu": avg_cpu_usage, "memory": avg_memory_usage})
+
+        # Clear samples for the next interval
+        cpu_usage_samples.clear()
+        memory_usage_samples.clear()
+
 
 # Start the background thread for CPU monitoring
 cpu_monitor_thread = threading.Thread(target=collect_cpu_usage, daemon=True)
