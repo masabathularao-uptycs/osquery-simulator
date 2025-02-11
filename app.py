@@ -28,8 +28,9 @@ def collect_cpu_usage():
     while True:
         current_time = time.strftime('%H:%M')  # Get current time in HH:MM format
         cpu_usage = psutil.cpu_percent(interval=1)
+        ram_usage_gb = psutil.virtual_memory().used / (1024 ** 3)
         with lock:
-            cpu_data_queue.append({"time": current_time, "value": cpu_usage})
+            cpu_data_queue.append({"time": current_time, "cpu": cpu_usage, "memory":ram_usage_gb})
         time.sleep(9)  # Additional 9 seconds after the 1-second `psutil` interval
 
 # Start the background thread for CPU monitoring
