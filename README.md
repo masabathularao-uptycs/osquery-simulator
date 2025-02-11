@@ -21,10 +21,7 @@
 
 3. Install the following python3 dependencies on all the machines.
     ```
-    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install flask";done
-    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install requests";done
-    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install pandas";done
-    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install scipy";done
+    for i in machine1 machine2 machine3 ; do ssh abacus@$i "pip3 install -r requirements.txt";done
     ```
 
 <br>

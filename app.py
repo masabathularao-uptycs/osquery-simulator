@@ -6,12 +6,35 @@ import json
 from helper import execute_shell_command
 from datetime import datetime, timedelta
 import random
+import psutil
+import json
+import threading
+import time
+from collections import deque
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = '343c855017e725321cb7f35b89c98b9e'
 # app.config['SESSION_TYPE'] = 'filesystem'
 # Session(app)
 
+
+# File to store CPU usage data
+# Global deque for storing up to 300 CPU usage records
+cpu_data_queue = deque(maxlen=300)
+lock = threading.Lock()  # Ensures thread-safe operations
+
+def collect_cpu_usage():
+    """Collect CPU usage every 10 seconds and store it in the global queue."""
+    while True:
+        current_time = time.strftime('%H:%M')  # Get current time in HH:MM format
+        cpu_usage = psutil.cpu_percent(interval=1)
+        with lock:
+            cpu_data_queue.append({"time": current_time, "value": cpu_usage})
+        time.sleep(9)  # Additional 9 seconds after the 1-second `psutil` interval
+
+# Start the background thread for CPU monitoring
+cpu_monitor_thread = threading.Thread(target=collect_cpu_usage, daemon=True)
+cpu_monitor_thread.start()
 
 
 @app.route('/execute_shell_com', methods=['GET'])
@@ -20,9 +43,9 @@ def execute_shell_com():
         command = request.args.get('shell_command', '')
 
         result = execute_shell_command(command)
-        print(result)
-        print("Status:", result["status"])
-        print("Output:", result["output"])
+        # print(result)
+        # print("Status:", result["status"])
+        # print("Output:", result["output"])
         if result["error"] and len(result["error"])!=0:
             print("Error:", result["error"])
             return jsonify({"status": result["status"],"message": f"Error occured. Executed {command} command on {hostname}.<br> Error : {result['error']}","output":result["output"]}), 200  # Internal Server Error
@@ -132,8 +155,8 @@ def check_sim_health():
         # Execute each bash command and collect the output
         for sim_type, command in bash_commands.items():
             command_result = execute_shell_command(command)
-            print(command)
-            print(command_result)
+            # print(command)
+            # print(command_result)
             command_outputs[sim_type] = command_result["output"]
             if command_result["error"] and len(command_result["error"])!=0:
                 command_outputs[sim_type] += command_result["error"]
@@ -175,6 +198,9 @@ def check_sim_health():
         # Reverse to ensure time ordering from past to present
         data.reverse()
 
+        with lock:
+            current_cpu_usage_list = list(cpu_data_queue)
+        
         return jsonify({
             "status": "success",
             "message": f"Successfully fetched {hostname} health information.",
@@ -185,7 +211,7 @@ def check_sim_health():
             },
             "main_params":main_params,
             "load_remaining_dur_in_sec":remaining_load_duration,
-            "cpu_stats":data
+            "cpu_stats":current_cpu_usage_list
         }), 200  # OK
 
     except Exception as e:
@@ -196,7 +222,7 @@ def check_sim_health():
 def update_load_params():
     try:
         updated_params = request.get_json()
-        print(updated_params)
+        # print(updated_params)
 
         if "instances" not in updated_params:
             return jsonify({"status": "error","message": f"Missing required key: 'instances' not present in received updated_params"}), 400  # Bad Request        
