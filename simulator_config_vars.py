@@ -43,3 +43,5 @@ TIME_BETWEEN_INSTANCE_ENROLLMENT = 20
 
 TIME =  "0000-01-02-01-01"
 shuffle_inputfile_if_reached_end = True
+
+CPU_MEMORY_STATS_INTERVAL = 60

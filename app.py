@@ -4,8 +4,6 @@ from simulator_config_vars import *
 # from flask_session import Session 
 import json
 from helper import execute_shell_command
-from datetime import datetime, timedelta
-import random
 import psutil
 import json
 import threading
@@ -31,7 +29,7 @@ def collect_cpu_usage():
         ram_usage_gb = psutil.virtual_memory().used / (1024 ** 3)
         with lock:
             cpu_data_queue.append({"time": current_time, "cpu": cpu_usage, "memory":ram_usage_gb})
-        time.sleep(9)  # Additional 9 seconds after the 1-second `psutil` interval
+        time.sleep(CPU_MEMORY_STATS_INTERVAL)  # Additional 9 seconds after the 1-second `psutil` interval
 
 # Start the background thread for CPU monitoring
 cpu_monitor_thread = threading.Thread(target=collect_cpu_usage, daemon=True)
