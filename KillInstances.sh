@@ -16,5 +16,6 @@ done
 echo "Stopping endpointsim processes..."
 killall endpointsim 2>/dev/null
 
+./CleanUp.sh
 
 echo "All specified processes have been terminated."
