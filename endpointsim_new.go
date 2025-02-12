@@ -789,14 +789,14 @@ func dist_read_listener(c chan DistReadRequest) {
 						req1.Header.Set("User-Agent", "osquery/4.6.4.8-Uptycs")
 						req1.Header.Set("Accept", "application/json")
 						resp1, dw_e := client.Do(req1)
-						log.Println("resp1", resp1)
+						//log.Println("resp1", resp1)
 						if dw_e != nil {
 							log.Fatalf("Got distributed write error %s", dw_e)
 						}
 						dw_elapsed := time.Since(start_dw).Milliseconds()
 						dist_write_histogram.add(float32(dw_elapsed), &dist_write_mux)
 						//realtime_resp_counter += 1
-						log.Println("post error", dw_e)
+						//log.Println("post error", dw_e)
 						if resp1.Status != "200 OK" {
 							dist_write_fail_counter += 1
 							//realtime_resp_fail_counter += 1
@@ -989,34 +989,36 @@ func post_to_logger(tstamp, name, uuidv4, node_key string, jsonMap LogMessage, c
 		if rowData, ok := data["columns"]; ok {
 			//log.Println("columns exists in data")
 			if columnData, ok := rowData.(map[string]interface{}); ok {
-				log.Println("checking for event_time data")
+				//log.Println("checking for event_time data")
 				if _, exists := columnData["event_time"]; exists {
 					//log.Println("event_time exists in data")
-					log.Println(strconv.Itoa(int(time.Now().UnixMilli())))
+					//log.Println(strconv.Itoa(int(time.Now().UnixMilli())))
 					data["columns"].(map[string]interface{})["event_time"] = strconv.Itoa(int(time.Now().UnixMilli()))
-				} else {
-					log.Println("event_time does not exists")
 				}
+				// else {
+				// 	log.Println("event_time does not exists")
+				// }
 			}
 		}
 
 		if rowData, ok := data["columns"]; ok {
 			//log.Println("columns exists in data")
 			if columnData, ok := rowData.(map[string]interface{}); ok {
-				log.Println("checking for login_name data")
+				//log.Println("checking for login_name data")
 				const letters = "abcdefghijklmnopqrstuvwxyz"
 				rand.Seed(time.Now().UnixNano()) // Seed the random number generator
 				word := make([]byte, 10)
 				for i := range word {
 					word[i] = letters[rand.Intn(len(letters))]
 				}
-				log.Println("new login_name:", string(word))
+				//log.Println("new login_name:", string(word))
 				if _, exists := columnData["login_name"]; exists {
-					log.Println("login_name exists in data")
+					//log.Println("login_name exists in data")
 					data["columns"].(map[string]interface{})["login_name"] = string(word) + name
-				} else {
-					log.Println("login_name does not exists")
 				}
+				// else {
+				// 	log.Println("login_name does not exists")
+				// }
 			}
 		}
 
