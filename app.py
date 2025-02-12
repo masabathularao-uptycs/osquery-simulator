@@ -227,24 +227,55 @@ def check_sim_health():
 @app.route('/update_load_params', methods=['POST'])
 def update_load_params():
     try:
+        # Parse JSON request
         updated_params = request.get_json()
-        # print(updated_params)
+        button_type_clicked = updated_params.get("button_clicked", "").strip()
+        print("Button clicked:", button_type_clicked)
 
+        # Validate required fields
         if "instances" not in updated_params:
-            return jsonify({"status": "error","message": f"Missing required key: 'instances' not present in received updated_params"}), 400  # Bad Request        
+            return jsonify({"status": "error", "message": "Missing required key: 'instances'"}), 400
+
+        # Ensure the file exists
+        if not os.path.exists(testinput_file):
+            return jsonify({"status": "error", "message": f"File {testinput_file} not found"}), 404
+
         try:
-            # Save the updated dictionary back to the Python file
-            with open(testinput_file, 'w') as f:
-                f.write(json.dumps(updated_params, indent=4))
+            # Handle different button actions
+            if button_type_clicked == "update_all":
+                with open(testinput_file, 'w') as f:
+                    json.dump(updated_params, f, indent=4)
+
+            elif button_type_clicked == "update_num_msgs":
+                with open(testinput_file, 'r') as f:
+                    testinput_file_contents = json.load(f)
+
+                if "how_many_msgs_to_send" in updated_params:
+                    testinput_file_contents["how_many_msgs_to_send"] = updated_params["how_many_msgs_to_send"]
+
+                    with open(testinput_file, 'w') as f:
+                        json.dump(testinput_file_contents, f, indent=4)
+
+            elif button_type_clicked == "update_inputfile":
+                with open(testinput_file, 'r') as f:
+                    testinput_file_contents = json.load(f)
+                    
+                if "inputfile" in updated_params:
+                    testinput_file_contents["inputfile"] = updated_params["inputfile"]
+
+                    with open(testinput_file, 'w') as f:
+                        json.dump(testinput_file_contents, f, indent=4)
+
+            else:
+                return jsonify({"status": "error", "message": "Invalid button type"}), 400
+
         except Exception as e:
-            return jsonify({"status": "error","message": f"Failed to write to file: {str(e)}"}), 500  # Internal Server Error
+            return jsonify({"status": "error", "message": f"Failed to update file: {str(e)}"}), 500
 
-        return jsonify({"status": "success","message": f"Parameters for {hostname} updated successfully. Please click on refresh button to view latest simulator parameters"}), 200  # OK
-
+        return jsonify({"status": "success", "message": "Parameters updated successfully. Please refresh to view latest values"}), 200
 
     except Exception as e:
-        return jsonify({"status": "error","message": f"An unexpected error occurred: {str(e)}"}), 500  # Internal Server Error
-
+        return jsonify({"status": "error", "message": f"An unexpected error occurred: {str(e)}"}), 500
 
 
 
