@@ -9,6 +9,8 @@ import json
 import threading
 import time
 from collections import deque
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = '343c855017e725321cb7f35b89c98b9e'
@@ -29,15 +31,16 @@ def collect_cpu_usage():
     while True:
         start_time = time.time()
         while time.time() - start_time < CPU_MEMORY_STATS_INTERVAL:
-            cpu_usage_samples.append(psutil.cpu_percent(interval=1))
-            memory_usage_samples.append(psutil.virtual_memory().used / (1024 ** 3))
+            cpu_usage_samples.append(round(psutil.cpu_percent(interval=1),2))
+            memory_usage_samples.append(round(psutil.virtual_memory().used / (1024 ** 3),2))
 
         # Calculate the average usage for the interval
         avg_cpu_usage = sum(cpu_usage_samples) / len(cpu_usage_samples) if cpu_usage_samples else 0
         avg_memory_usage = sum(memory_usage_samples) / len(memory_usage_samples) if memory_usage_samples else 0
 
         # Get current time
-        current_time = time.strftime('%H:%M')
+        ist = pytz.timezone("Asia/Kolkata")
+        current_time = datetime.now(ist).strftime('%H:%M')
 
         with lock:
             cpu_data_queue.append({"time": current_time, "cpu": avg_cpu_usage, "memory": avg_memory_usage})
