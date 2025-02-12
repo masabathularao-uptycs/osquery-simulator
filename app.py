@@ -165,9 +165,12 @@ def check_sim_health():
                     expected_instances+=1
                     expected_assets+=instance["clients"]
                     if instance["domain"] in domain_and_count:
-                        domain_and_count[instance["domain"]] += instance["clients"]
+                        domain_and_count[instance["domain"]] += '+' + str(instance["clients"])
                     else:
-                        domain_and_count[instance["domain"]] = instance["clients"]
+                        domain_and_count[instance["domain"]] = str(instance["clients"])
+                for domain,expression in domain_and_count.items():
+                    if '+' in expression:
+                        domain_and_count[domain] = f'{eval(expression)} ( = {domain_and_count[domain]})'
             except Exception as e:
                 print(f"Error while processing {testinput_file} contents")
         # Execute each bash command and collect the output
